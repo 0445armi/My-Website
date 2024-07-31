@@ -1,0 +1,138 @@
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0px;
+    background-color: #000000;
+    color: #fff;
+    position: relative;
+    margin-top: -20px;
+    margin-right: -13px;
+}
+
+.nav-left {
+    margin-left: 339px;
+    display: flex;
+    align-items: center;
+}
+
+.search-form {
+    margin-bottom: -6px;
+    margin-right: 2100px;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    width: 199px;
+}
+
+.search-button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.search-results-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.search-results-table th, .search-results-table td {
+    border: 1px solid #fcfcfc;
+    padding: 8px;
+}
+
+.search-results-table th {
+    background-color: #000000;
+    text-align: left;
+}
+
+.nav-right {
+    margin-left: 1249px;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.text{
+    margin-right: 10px;
+    margin-left: 6px;
+}
+
+.nav1{
+    display: contents;
+}
+
+.pro{
+    margin-left: -30px;
+}
+
+.profile-container {
+    margin-left: -143px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-icon {
+    margin-left: 9px;
+    margin-right: 4px;
+    font-size: 30px;
+    color: #fff;
+}
+
+.profile-menu {
+    position: absolute;
+    top: 32px;
+    right: 33px;
+    background-color: #fff;
+    color: #202020;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 200px;
+}
+
+.profile-menu-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top: 2px;
+}
+
+.profile-menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-menu-separator {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 8px 0;
+}
+
+.logo2{
+    margin-right: 13px;
+    margin-top: 4px;
+    margin-bottom: -4px;
+}
+
+.user-name {
+    margin-left: 5px;
+    margin-right: -10px; 
+    font-weight: bold;
+}

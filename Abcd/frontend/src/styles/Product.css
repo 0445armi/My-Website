@@ -1,0 +1,287 @@
+.container {
+    position: relative;
+    text-align: left;
+    margin-left: 220px;
+}
+
+.h1 {
+    text-align: center;
+    margin-bottom: 28px;
+    margin-top: 50px;
+}
+
+.btn1 {
+    background-color: rgb(98, 98, 251);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.btn1:hover {
+    background-color: rgb(2, 2, 194);
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-box {
+    background: white;
+    padding: 30px 58px;
+    border-radius: 10px;
+    width: 313px;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 22px;
+    right: 25px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 27px;
+    height: 26px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.popup-box form {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-box label {
+    margin-bottom: 14px;
+}
+
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
+    margin-left: 8px;
+    margin-right: -304px;
+    padding: 6px 5px;
+    font-size: 15px;
+}
+
+.popup-box button[type="submit"] {
+    background-color: rgb(98, 98, 251);
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.popup-box button[type="submit"]:hover {
+    background-color: rgb(2, 2, 194);
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.table-container {
+    width: 100%;
+    margin: 5px 0;
+    border-collapse: collapse;
+}
+
+.table-container table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.table-container thead {
+    background-color: #ffffff;
+}
+
+.table-container th {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+.table-container td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.table-container a:hover {
+    text-decoration: underline;
+}
+
+.table-container input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.table-container img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.not {
+    text-align: center;
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.btn2 {
+    margin-right: 5px;
+    font-size: large;
+}
+
+.delete-confirm-overlay {
+    margin-top: -65px;
+    margin-left: -320px;
+    display: flex;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: fixed;    
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.delete-confirm-box {
+    background: white;
+    padding: 30px 58px;
+    border-radius: 10px;
+    width: 313px;
+    position: relative;
+}
+
+.cancel-btn {
+    background-color: rgb(98, 98, 251);
+    border: none;
+    color: white;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin-top: 15px;
+    margin-right: 13px;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.confirm-btn {
+    background-color: rgba(201, 0, 0, 0.879);
+    border: none;
+    color: white;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    cursor: pointer;
+    border-radius: 10%;
+}
+
+.sorting-controls {
+    margin-left: 1370px;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-top: -40px;
+}
+
+.sorting-controls label {
+    font-weight: bold;
+}
+
+.sorting-controls select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+.sorting-controls select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.sorting-controls button {
+    padding: 7px 12px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.sorting-controls button:hover {
+    background-color: #0056b3;
+    border-color: #004494;
+}
+
+.logo2{
+    margin-right: 11px;
+    margin-top: 4px;
+    margin-bottom: -4px;
+    margin-left: 5px;
+}
+
+table th {
+    cursor: pointer; 
+    padding: 10px;
+    text-align: left;
+}
+
+table th.sortable:hover {
+    background-color: #f0f0f0; 
+}
+
+table th.sorted-asc::after {
+    content: ' 🔼'; 
+}
+
+table th.sorted-desc::after {
+    content: ' 🔽'; 
+}
