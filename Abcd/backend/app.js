@@ -1,13 +1,15 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors')
-const app = express()
-const port = 5174
+const cors = require('cors');
+const connectDB = require('./src/db/app'); 
+const userRoutes = require('./src/api/router/userRouter');
+const app = express();
 
-app.use(cors());
+app.use(cors({origin: 'http://localhost:5173'}));
 app.use(express.json());
 
+connectDB();
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+app.use('/api', userRoutes);
+
+const PORT = process.env.PORT || 5174;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

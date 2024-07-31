@@ -25,7 +25,7 @@ const Register = () => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await registerUser(values);
-            console.log('Response from server:', response);
+            response();
             toast.success('Registration successful!');
             resetForm();
             navigate('/login');

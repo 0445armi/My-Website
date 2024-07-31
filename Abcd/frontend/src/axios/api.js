@@ -8,7 +8,7 @@ const getToken = () => {
 //Register User
 const registerUser = async (formData) => {
     try {
-        const response = await axios.post(API_URL.REGISTER, JSON.stringify(formData), {
+        const response = await axios.post(API_URL.REGISTER, formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
