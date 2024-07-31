@@ -284,8 +284,8 @@ const Product = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((product, index) => (
-                                <tr key={index}>
+                            {products.map((product) => (
+                                <tr key={product._id}>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.category}</td>
