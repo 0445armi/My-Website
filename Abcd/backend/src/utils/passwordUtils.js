@@ -5,7 +5,6 @@ const hashPassword = async (password) => {
     return await bcrypt.hash(password, salt);
 };
 
-
 module.exports = {
     hashPassword
 };

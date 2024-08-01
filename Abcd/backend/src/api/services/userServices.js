@@ -31,7 +31,12 @@ const createProduct = async (productData) => {
 };
 
 // Update Product
-const updateProduct = async (id, updateFields) => {
+const updateProduct = async (id, updateFields, file) => {
+    if (file) {
+        updateFields.image = file.filename; 
+    }else {
+        delete updateFields.image; 
+    }
     const product = await Product.findByIdAndUpdate(id, updateFields, { new: true });
     if (!product) throw new Error('Product not found');
     return product;
@@ -46,14 +51,22 @@ const deleteProduct = async (id) => {
 
 // Fetch Products
 const fetchProducts = async (page, limit, search, sortBy, sortType) => {
-    const query = search ? { name: { $regex: search, $options: 'i' } } : {};
-    const sortOptions = { [sortBy]: sortType === 'asc' ? 1 : -1 };
-    const products = await Product.find(query)
-        .sort(sortOptions)
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .exec();
-    const totalProducts = await Product.countDocuments(query);
+    const matchStage = search
+        ? { name: { $regex: search, $options: 'i' } }
+        : {};
+    const sortStage = {
+        [sortBy]: sortType === 'asc' ? 1 : -1,
+    };
+    const skipStage = (page - 1) * limit;
+    const limitStage = limit;
+    const pipeline = [
+        { $match: matchStage },
+        { $sort: sortStage },
+        { $skip: skipStage },
+        { $limit: limitStage },
+    ];
+    const products = await Product.aggregate(pipeline);
+    const totalProducts = await Product.countDocuments(matchStage);
     const totalPages = Math.ceil(totalProducts / limit);
     return { products, totalPages };
 };

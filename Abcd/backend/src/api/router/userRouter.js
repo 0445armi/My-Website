@@ -6,7 +6,7 @@ const upload = require('../../utils/file_upload');
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/products', upload.single('image'), userController.createProduct);
-router.put('/products/:id', userController.updateProduct);
+router.put('/products/:id',upload.single('image'), userController.updateProduct);
 router.delete('/products/:id', userController.deleteProduct);
 router.get('/products', userController.getProducts);
 

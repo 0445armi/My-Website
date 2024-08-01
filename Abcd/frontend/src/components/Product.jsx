@@ -74,11 +74,11 @@ const Product = () => {
                         updatedFields[key] = values[key];
                     }
                 }
-                const formData = new FormData();
+                const updateFormData = new FormData();
                 for (const key in updatedFields) {
-                    formData.append(key, updatedFields[key]);
+                    updateFormData.append(key, updatedFields[key]);
                 }
-                updatedProduct = await updateProduct(editingProduct._id, formData);
+                updatedProduct = await updateProduct(editingProduct._id, updateFormData);
                 setProducts((prevProducts) =>
                     prevProducts.map((product) =>
                         product._id === editingProduct._id ? updatedProduct : product

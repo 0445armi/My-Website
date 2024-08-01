@@ -78,8 +78,7 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
 const deleteProduct = async (id) => {
     try {
         const token = getToken();
-        const deleteUrl = API_URL.DELETE(id);
-        const response = await axios.delete(deleteUrl, {
+        const response = await axios.delete(API_URL.DELETE(id), {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
