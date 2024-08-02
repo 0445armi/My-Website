@@ -21,17 +21,18 @@ exports.login = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
+        const userId = req.user?._id;
+        console.log(userId);
+        const { name, price, category, quantity } = req.body;
         const productData = {
-            name: req.body.name,
-            price: req.body.price,
-            category: req.body.category,
-            quantity: req.body.quantity,
-            image: req.file.filename, 
+            name,
+            price,
+            category,
+            quantity,
+            image: req.file?.filename, 
+            userId,
         };
-        const product = await userService.createProduct(productData);
+        const product = await userService.createProduct(productData, userId);
         res.status(201).json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -58,12 +59,13 @@ exports.deleteProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
     try {
+        const userId = req.user._id;
         const { page = 1, limit = 10, search = '', sortBy = 'name', sortType = 'asc' } = req.query;
         const parsedPage = parseInt(page, 10);
         const parsedLimit = parseInt(limit, 10);
-        const { products, totalPages } = await userService.fetchProducts(parsedPage, parsedLimit, search, sortBy, sortType);
+        const { products, totalPages } = await userService.fetchProducts(userId, parsedPage, parsedLimit, search, sortBy, sortType);
         res.status(200).json({ products, totalPages });
-    } catch (error) {
+    } catch (error) {   
         res.status(400).json({ message: error.message });
     }
 };

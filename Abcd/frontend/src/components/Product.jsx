@@ -162,6 +162,7 @@ const Product = () => {
 
     const handleSearch = async (e) => {
         e.preventDefault();
+        setCurrentPage(1);
         loadProducts(1, searchTerm);
     };
 

@@ -24,8 +24,8 @@ const loginUser = async ({ email, password }) => {
 };
 
 // Create Product
-const createProduct = async (productData) => {
-    const product = new Product(productData);
+const createProduct = async (productData, userId) => {
+    const product = new Product({ ...productData, userId });
     await product.save();
     return product;
 };
@@ -50,9 +50,9 @@ const deleteProduct = async (id) => {
 };
 
 // Fetch Products
-const fetchProducts = async (page, limit, search, sortBy, sortType) => {
+const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
     const matchStage = search
-        ? { name: { $regex: search, $options: 'i' } }
+        ? { name: { $regex: new RegExp(search, 'i') },userId}
         : {};
     const sortStage = {
         [sortBy]: sortType === 'asc' ? 1 : -1,
@@ -64,6 +64,14 @@ const fetchProducts = async (page, limit, search, sortBy, sortType) => {
         { $sort: sortStage },
         { $skip: skipStage },
         { $limit: limitStage },
+        {
+            $lookup: {
+                from: 'users',            
+                localField: 'userId',     
+                foreignField: '_id',      
+                as: 'user',               
+            },
+        }
     ];
     const products = await Product.aggregate(pipeline);
     const totalProducts = await Product.countDocuments(matchStage);
