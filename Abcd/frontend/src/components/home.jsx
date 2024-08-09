@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Home.css"; 
+import "../styles/home.css"; 
 import { fetchProducts } from "../axios/api"; 
 import { BASE_URL } from "../store/config";
 

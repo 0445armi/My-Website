@@ -1,8 +1,8 @@
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Product = require('../models/Product');
 
+//Register
 const registerUser = async ({ userName, email, password }) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) throw new Error('User already exists');
@@ -12,7 +12,7 @@ const registerUser = async ({ userName, email, password }) => {
 
     return { userName: user.userName, email: user.email }; 
 };
-
+//Login
 const loginUser = async ({ email, password }) => {
     const user = await User.findOne({ email });
     if (!user) throw new Error('Invalid email or password');
@@ -23,72 +23,7 @@ const loginUser = async ({ email, password }) => {
     return { token, userName: user.userName };
 };
 
-// Create Product
-const createProduct = async (productData) => {
-    const product = new Product({ ...productData });
-    await product.save();
-    return product;
+module.exports = {
+    registerUser, 
+    loginUser
 };
-
-// Update Product
-const updateProduct = async (id, updateFields, file) => {
-    if (file) {
-        updateFields.image = file.filename; 
-    }else {
-        delete updateFields.image; 
-    }
-    const product = await Product.findByIdAndUpdate(id, updateFields, { new: true });
-    if (!product) throw new Error('Product not found');
-    return product;
-};
-
-// Delete Product
-const deleteProduct = async (id) => {
-    const result = await Product.findByIdAndDelete(id);
-    if (!result) throw new Error('Product not found');
-    return result;
-};
-
-// Fetch Products
-const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
-    const matchStage = search
-        ? { name: { $regex: new RegExp(search, 'i') },userId}
-        : {};
-    const sortStage = {
-        [sortBy]: sortType === 'asc' ? 1 : -1,
-    };
-    const skipStage = (page - 1) * limit;
-    const limitStage = limit;
-    const pipeline = [
-        { $match: matchStage },
-        { $sort: sortStage },
-        { $skip: skipStage },
-        { $limit: limitStage },
-        {
-            $lookup: {
-                from: 'addresses',            
-                localField: 'addressId',     
-                foreignField: 'addressId',      
-                as: 'address',            
-            },
-        },
-        {
-            $unwind: {
-                path: '$address',
-                preserveNullAndEmptyArrays: true, 
-            },
-        },
-        {
-            $project: {
-                'address.__v': 0,
-                'address._id': 0,
-            },
-        },
-    ];
-    const products = await Product.aggregate(pipeline);
-    const totalProducts = await Product.countDocuments(matchStage);
-    const totalPages = Math.ceil(totalProducts / limit);
-    return { products, totalPages };
-};
-
-module.exports = {registerUser, loginUser, createProduct, updateProduct, deleteProduct, fetchProducts};

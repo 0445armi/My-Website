@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import "../styles/Header.css";
+import "../styles/header.css";
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { toast } from 'react-toastify';

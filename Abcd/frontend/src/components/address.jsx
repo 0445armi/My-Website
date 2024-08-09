@@ -6,7 +6,7 @@ import {
     ErrorMessage
 } from "formik";
 import * as Yup from "yup";
-import "../styles/Product.css";
+import "../styles/product.css";
 import {
     deleteAddress,
     fetchAddress,
@@ -17,7 +17,7 @@ import {
     MdModeEdit,
     MdDelete
 } from "react-icons/md";
-import Pagination from "./Pagination";
+import Pagination from "./pagination";
 
 const validationSchema = Yup.object({
     city: Yup.string().required("City required"),

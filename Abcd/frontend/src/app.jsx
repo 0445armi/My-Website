@@ -7,14 +7,14 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Register from './views/Register';
-import Login from './views/Login';
-import Home from './components/Home';
-import About from './components/About';
-import Product from './components/Product';
-import Layout from './components/Layout';
-import PrivateRoute from './components/PrivateRoute';
-import Address from './components/Address';
+import Register from './views/register';
+import Login from './views/login';
+import Home from './components/home';
+import About from './components/about';
+import Product from './components/product';
+import Layout from './components/layout';
+import PrivateRoute from './components/privateRoute';
+import Address from './components/address';
 
 const App = () => {
   return (
