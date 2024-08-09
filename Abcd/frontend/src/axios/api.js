@@ -19,7 +19,6 @@ const registerUser = async (formData) => {
         throw error;
     }
 };
-
 //Login User
 const loginUser = async ({email, password}) => {
     try {
@@ -32,7 +31,6 @@ const loginUser = async ({email, password}) => {
         throw error;
     }
 };
-
 //Create Product
 const createProduct = async (formData) => {
     try {
@@ -49,7 +47,6 @@ const createProduct = async (formData) => {
         throw error;
     }
 };
-
 //Get Product
 const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
     try {
@@ -73,7 +70,6 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
         throw error;
     }
 };
-
 //Delete Product
 const deleteProduct = async (id) => {
     try {
@@ -89,7 +85,6 @@ const deleteProduct = async (id) => {
         throw error;
     }
 };
-
 //Update Product
 const updateProduct = async (id, formData) => {
     try {
@@ -106,6 +101,76 @@ const updateProduct = async (id, formData) => {
         throw error;
     }
 };
+// Fetch Addresses
+const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType = 'asc') => {
+    try {
+        const token = getToken();
+        const response = await axios.get(API_URL.ADDRESSES, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            params: {
+                page,
+                limit: 4, 
+                search: searchTerm,
+                sortBy,
+                sortType
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching addresses:', error.message);
+        throw error;
+    }
+};
+// Create Address
+const createAddress = async (formData) => {
+    try {
+        const token = getToken();
+        const response = await axios.post(API_URL.ADDRESSES, formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating address:', error.message);
+        throw error;
+    }
+};
+// Update Address
+const updateAddress = async (id, formData) => {
+    try {
+        const token = getToken();
+        const response = await axios.put(API_URL.UPDATE_ADDRESS(id), formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating address:', error.message);
+        throw error;
+    }
+};
+// Delete Address
+const deleteAddress = async (id) => {
+    try {
+        const token = getToken();
+        const response = await axios.delete(API_URL.DELETE_ADDRESS(id), {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting address:', error.message);
+        throw error;
+    }
+};
 
 export { 
     registerUser, 
@@ -114,4 +179,8 @@ export {
     createProduct, 
     deleteProduct, 
     updateProduct,
+    fetchAddress,
+    createAddress,
+    updateAddress,
+    deleteAddress
 };

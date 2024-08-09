@@ -15,11 +15,15 @@ const ProductSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-    },
+    }, 
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User'
     },
+    addressId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Address'
+    }
 },{
     timestamps: true, 
 });

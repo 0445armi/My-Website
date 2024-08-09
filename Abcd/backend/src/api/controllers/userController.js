@@ -1,4 +1,4 @@
-const userService = require('../services/userServices');
+const userService = require('../services/userService');
 
 exports.register = async (req, res) => {
     try {
@@ -22,8 +22,7 @@ exports.login = async (req, res) => {
 exports.createProduct = async (req, res) => {
     try {
         const userId = req.user?._id;
-        console.log(userId);
-        const { name, price, category, quantity } = req.body;
+        const { name, price, category, quantity, addressId } = req.body;
         const productData = {
             name,
             price,
@@ -31,8 +30,9 @@ exports.createProduct = async (req, res) => {
             quantity,
             image: req.file?.filename, 
             userId,
+            addressId
         };
-        const product = await userService.createProduct(productData, userId);
+        const product = await userService.createProduct(productData);
         res.status(201).json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });

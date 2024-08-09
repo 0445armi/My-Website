@@ -24,8 +24,8 @@ const loginUser = async ({ email, password }) => {
 };
 
 // Create Product
-const createProduct = async (productData, userId) => {
-    const product = new Product({ ...productData, userId });
+const createProduct = async (productData) => {
+    const product = new Product({ ...productData });
     await product.save();
     return product;
 };
@@ -66,12 +66,24 @@ const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
         { $limit: limitStage },
         {
             $lookup: {
-                from: 'users',            
-                localField: 'userId',     
-                foreignField: '_id',      
-                as: 'user',               
+                from: 'addresses',            
+                localField: 'addressId',     
+                foreignField: 'addressId',      
+                as: 'address',            
             },
-        }
+        },
+        {
+            $unwind: {
+                path: '$address',
+                preserveNullAndEmptyArrays: true, 
+            },
+        },
+        {
+            $project: {
+                'address.__v': 0,
+                'address._id': 0,
+            },
+        },
     ];
     const products = await Product.aggregate(pipeline);
     const totalProducts = await Product.countDocuments(matchStage);

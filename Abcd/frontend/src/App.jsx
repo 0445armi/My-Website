@@ -14,6 +14,7 @@ import About from './components/About';
 import Product from './components/Product';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
+import Address from './components/Address';
 
 const App = () => {
   return (
@@ -44,6 +45,14 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <Product />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/address"
+              element={
+                <PrivateRoute>
+                  <Address />
                 </PrivateRoute>
               }
             />
