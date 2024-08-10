@@ -1,4 +1,10 @@
 const productService = require('../services/productService');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 //Create Product
 exports.createProduct = async (req, res) => {
@@ -15,6 +21,7 @@ exports.createProduct = async (req, res) => {
             addressId
         };
         const product = await productService.createProduct(productData);
+        io.emit('newProduct', product);
         res.status(201).json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -37,6 +44,7 @@ exports.getProducts = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const product = await productService.updateProduct(req.params.id, req.body);
+        io.emit('updateProduct', product);
         res.status(200).json(product);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -46,6 +54,7 @@ exports.updateProduct = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
     try {
         await productService.deleteProduct(req.params.id);
+        io.emit('deleteProduct', req.params.id);
         res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });

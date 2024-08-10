@@ -19,6 +19,9 @@ import {
 } from "react-icons/md";
 import { BASE_URL } from "../store/config";
 import Pagination from "./pagination";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5175');
 
 const validationSchema = Yup.object({
     name: Yup.string().required("name required"),
@@ -128,6 +131,26 @@ const Product = () => {
 
     useEffect(() => {
         loadProducts(currentPage, searchTerm);
+        socket.on('newProduct', (newProduct) => {
+            setProducts((prevProducts) => [...prevProducts, newProduct]);
+        });
+        socket.on('updateProduct', (updatedProduct) => {
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product._id === updatedProduct._id ? updatedProduct : product
+                )
+            );
+        });
+        socket.on('deleteProduct', (deletedProductId) => {
+            setProducts((prevProducts) =>
+                prevProducts.filter((product) => product._id !== deletedProductId)
+            );
+        });
+        return () => {
+            socket.off('newProduct');
+            socket.off('updateProduct');
+            socket.off('deleteProduct');
+        };
     }, [currentPage]);
 
     const cancelDelete = () => {

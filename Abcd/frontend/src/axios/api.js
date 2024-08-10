@@ -1,5 +1,8 @@
 import axios from 'axios';
+import io from 'socket.io-client';
 import { API_URL } from '../store/config';
+
+const socket = io('http://localhost:5175');
 
 const getToken = () => {
     return localStorage.getItem('jwtToken');
@@ -41,7 +44,9 @@ const createProduct = async (formData) => {
                 'Content-Type': 'multipart/form-data'
             },
         });
-        return response.data;
+        const createdProduct = response.data;
+        socket.emit('newProduct', createdProduct);
+        return createdProduct;
     } catch (error) {
         console.error('Error message:', error.message);
         throw error;
@@ -79,7 +84,7 @@ const deleteProduct = async (id) => {
                 'Authorization': `Bearer ${token}`
             },
         });
-        return response.data;
+        socket.emit('deleteProduct', id);
     } catch (error) {
         console.error('Error deleting product:', error.message);
         throw error;
@@ -95,7 +100,9 @@ const updateProduct = async (id, formData) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        return response.data;
+        const updatedProduct = response.data;
+        socket.emit('updateProduct', updatedProduct);
+        return updatedProduct;
     } catch (error) {
         console.error('Error updating product:', error.message);
         throw error;

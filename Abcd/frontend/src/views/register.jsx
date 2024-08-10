@@ -21,7 +21,6 @@ const validationSchema = Yup.object().shape({
 
 const Register = () => {
     const navigate = useNavigate();
-
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await registerUser(values);

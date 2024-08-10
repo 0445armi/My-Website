@@ -15,6 +15,7 @@ import Product from './components/product';
 import Layout from './components/layout';
 import PrivateRoute from './components/privateRoute';
 import Address from './components/address';
+import "./socket/socket";
 
 const App = () => {
   return (
