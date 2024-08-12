@@ -11,7 +11,7 @@ import {
     deleteAddress,
     fetchAddress,
     createAddress,
-    updateAddress
+    updateAddress   
 } from "../axios/api";
 import {
     MdModeEdit,
@@ -76,7 +76,7 @@ const Address = () => {
                 for (const key in updatedFields) {
                     updateFormData.append(key, updatedFields[key]);
                 }
-                updatedAddress = await updateAddress(editingAddress._id, values);
+                updatedAddress = await updateAddress(editingAddress._id, updatedFields);
                 setAddresses((prevAddresses) =>
                     prevAddresses.map((address) =>
                         address._id === editingAddress._id ? updatedAddress : address
@@ -116,9 +116,14 @@ const Address = () => {
 
     const loadAddresses = async (page = currentPage, searchTerm = '', sortBy = 'city', sortType = 'asc') => {
         try {
-            const response = await fetchAddress(page, searchTerm, sortBy, sortType);
-            setAddresses(response.addresses || []);
-            setTotalPages(response.totalPages || 1);
+            const response = await fetchAddress(page, 10, searchTerm, sortBy, sortType);
+            if (response && response.addresses) {
+                setAddresses(response.addresses);
+                setTotalPages(response.totalPages || 1);
+            } else {
+                setAddresses([]); 
+                setTotalPages(1);
+            }
         } catch (error) {
             console.error('Error fetching addresses:', error.message);
         }
@@ -161,7 +166,7 @@ const Address = () => {
     const handleSearch = async (e) => {
         e.preventDefault();
         setCurrentPage(1);
-        loadAddresses(1, searchTerm);
+        loadAddresses(1, searchTerm, sortBy, sortType);
     };
 
     return (
@@ -183,10 +188,10 @@ const Address = () => {
                         <h2 className="h1">{isEdit ? "Edit Address" : "Create Address"}</h2>
                         <Formik
                             initialValues={{
-                                city: isEdit ? editingAddress.city : "",
-                                state: isEdit ? editingAddress.state : "",
-                                country: isEdit ? editingAddress.country : "",
-                                pinCode: isEdit ? editingAddress.pinCode : "",
+                                city: isEdit ? editingAddress?.city : "",
+                                state: isEdit ? editingAddress?.state : "",
+                                country: isEdit ? editingAddress?.country : "",
+                                pinCode: isEdit ? editingAddress?.pinCode : "",
                             }}
                             validationSchema={validationSchema}
                             onSubmit={handleAddressSubmit}

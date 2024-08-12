@@ -7,8 +7,8 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Register from './views/register';
-import Login from './views/login';
+import Register from './components/Auth/register';
+import Login from './components/Auth/login';
 import Home from './components/home';
 import About from './components/about';
 import Product from './components/product';

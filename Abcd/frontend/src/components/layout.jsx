@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/layout.css';
 import logo from "../public/image.png";
-import Header from './header';
+import Header from './Layout/header';
 import {
     Link,
     Outlet,
