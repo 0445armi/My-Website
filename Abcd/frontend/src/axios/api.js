@@ -2,7 +2,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { API_URL } from '../store/config';
 
-const socket = io('http://localhost:5175');
+const socket = io('http://localhost:8080');
 
 const getToken = () => {
     return localStorage.getItem('jwtToken');
@@ -16,6 +16,7 @@ const registerUser = async (formData) => {
                 'Content-Type': 'application/json',
             },
         });
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error message:', error.message);

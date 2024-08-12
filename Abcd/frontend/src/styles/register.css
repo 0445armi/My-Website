@@ -29,7 +29,7 @@ body {
 .c1 {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-top: -10px;
 }
 
 .c1 label {

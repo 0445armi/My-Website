@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../styles/home.css"; 
-import { fetchProducts } from "../axios/api"; 
-import { BASE_URL } from "../store/config";
+import "../../styles/home.css"; 
+import { fetchProducts } from "../../axios/api"; 
+import { BASE_URL } from "../../store/config";
 
 const Home = () => {
     const [products, setProducts] = useState([]);

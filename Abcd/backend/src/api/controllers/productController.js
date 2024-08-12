@@ -30,7 +30,7 @@ exports.createProduct = async (req, res) => {
 //Get Product
 exports.getProducts = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user?._id;
         const { page = 1, limit = 10, search = '', sortBy = 'name', sortType = 'asc' } = req.query;
         const parsedPage = parseInt(page, 10);
         const parsedLimit = parseInt(limit, 10);

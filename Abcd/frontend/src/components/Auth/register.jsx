@@ -14,12 +14,11 @@ import {
 import { registerUser } from "../../axios/api";
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('userName is required'),
-    email: Yup.string().email('Invalid email').required('email is required'),
-    password: Yup.string().required('password is required').min(6, 'Password must be at least 6 characters'),
-    confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), ''], 'Passwords must match')
-        .required('Required')
+    userName: Yup.string().required('UserName is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+    phone: Yup.string().required('Phone number is required'),
+    address: Yup.string().required('Address is required'),
 });
 
 const Register = () => {
@@ -43,7 +42,8 @@ const Register = () => {
                     userName: '',
                     email: '',
                     password: '',
-                    confirmPassword: ''
+                    phone: '',
+                    address: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
@@ -52,7 +52,7 @@ const Register = () => {
                     <Form className="register-form">
                         <h1 className='m1'>Register</h1>
                         <label className="c1">
-                            User Name:
+                        User Name:
                             <Field
                                 type="text"
                                 name="userName"
@@ -88,16 +88,21 @@ const Register = () => {
                         </label>
                         <br />
                         <label className="c1">
-                            Confirm Password:
-                            <Field
-                                type="password"
-                                name="confirmPassword"
-                                className="input"
-                            />
-                            {errors.confirmPassword && touched.confirmPassword ? (
-                                <div className="error-message">{errors.confirmPassword}</div>
+                            Phone:
+                            <Field type="text" name="phone" className="input" />
+                            {errors.phone && touched.phone ? (
+                                <div className="error-message">{errors.phone}</div>
                             ) : null}
                         </label>
+                        <br />
+                        <label className="c1">
+                            Address:
+                            <Field type="text" name="address" className="input" />
+                            {errors.address && touched.address ? (
+                                <div className="error-message">{errors.address}</div>
+                            ) : null}
+                        </label>
+                        <br />
                         <button type="submit" className="btn">Register</button>
                         <p className="txt">
                             Already Have an Account? <Link to="/login">Login</Link>

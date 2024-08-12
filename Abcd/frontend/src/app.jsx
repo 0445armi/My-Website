@@ -9,12 +9,13 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Register from './components/Auth/register';
 import Login from './components/Auth/login';
-import Home from './components/home';
+import Home from './components/pages/home';
 import About from './components/about';
 import Product from './components/product';
-import Layout from './components/layout';
+import Layout from './components/Layout/layout';
 import PrivateRoute from './components/privateRoute';
 import Address from './components/address';
+import Contact from './components/pages/contact';
 import "./socket/socket";
 
 const App = () => {
@@ -38,6 +39,14 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <About />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <PrivateRoute>
+                  <Contact />
                 </PrivateRoute>
               }
             />

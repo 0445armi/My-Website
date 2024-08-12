@@ -24,5 +24,5 @@ app.use('/api', addressRoutes);
 app.use('/api', productRoutes);
 app.use(upload.any());
 
-const PORT = process.env.PORT || 5175;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

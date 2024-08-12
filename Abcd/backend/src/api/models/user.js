@@ -10,6 +10,16 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
     },
+    phone: {
+        type: String,
+    },
+    address: {
+        type: String,
+    },
+    role: {
+        type: Number,
+        default: 0,
+    }
 }, {
     timestamps: true, 
 });

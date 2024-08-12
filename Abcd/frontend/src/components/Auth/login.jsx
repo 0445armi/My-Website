@@ -24,8 +24,9 @@ const Login = () => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await loginUser(values);
+            console.log('Response:', response);
             localStorage.setItem('jwtToken', response.token);
-            localStorage.setItem('userName', response.userName);
+            localStorage.setItem('name', response.user.userName);
             toast.success('Login successful!');
             resetForm();
             navigate('/home');
