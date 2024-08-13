@@ -51,7 +51,7 @@ const Login = () => {
             >
                 {({ touched, errors }) => (
                     <Form className='login-form'>
-                        <h1 className='m1'>Login</h1>
+                        <h1 className='m1'>Log In</h1>
                         <label className="c1">
                             Email:
                             <Field

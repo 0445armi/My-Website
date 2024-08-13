@@ -19,7 +19,8 @@
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
-    margin: 10px;
+    margin-top: 31px;
+    margin-bottom: 15px;
     cursor: pointer;
     border-radius: 10%;
 }
@@ -43,7 +44,7 @@
 
 .popup-box {
     background: white;
-    padding: 30px 58px;
+    padding: 30px 20px;
     border-radius: 10px;
     width: 313px;
     position: relative;
@@ -157,6 +158,8 @@
 }
 
 .not {
+    margin-left: 200px;
+    margin-top: 200px;
     text-align: center;
     font-size: larger;
     font-weight: bolder;
@@ -168,15 +171,15 @@
 }
 
 .delete-confirm-overlay {
-    margin-top: -65px;
-    margin-left: -320px;
+    position: fixed;    
     display: flex;
-    z-index: 1000;
     justify-content: center;
     align-items: center;
+    margin-top: -128px;
+    margin-left: -232px;
+    z-index: 1000;
     height: 100%;
     width: 100%;
-    position: fixed;    
     background: rgba(0, 0, 0, 0.5);
 }
 
@@ -261,7 +264,7 @@
     border-color: #004494;
 }
 
-.logo2{
+.logo2 {
     margin-right: 11px;
     margin-top: 4px;
     margin-bottom: -4px;
@@ -269,19 +272,23 @@
 }
 
 table th {
-    cursor: pointer; 
+    cursor: pointer;
     padding: 10px;
     text-align: left;
 }
 
 table th.sortable:hover {
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
 }
 
 table th.sorted-asc::after {
-    content: ' 🔼'; 
+    content: " 🔼";
 }
 
 table th.sorted-desc::after {
-    content: ' 🔽'; 
+    content: " 🔽";
+}
+
+.search-input{
+    margin-bottom: 10px;
 }

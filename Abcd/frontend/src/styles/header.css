@@ -39,6 +39,7 @@
 }
 
 .profile-container {
+    margin-right: 30px;
     display: flex;
     align-items: center;
     position: relative;
@@ -53,8 +54,8 @@
 
 .profile-menu {
     position: absolute;
-    top: 40px;
-    right: 0;
+    top: 30px;
+    right: 60px;
     background-color: #fff;
     color: #202020;
     border-radius: 5px;

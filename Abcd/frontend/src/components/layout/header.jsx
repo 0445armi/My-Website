@@ -3,7 +3,7 @@ import "../../styles/header.css";
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
 import { toast } from 'react-toastify';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TfiDashboard } from "react-icons/tfi";
 import { ImNotification } from "react-icons/im";
 import { RiUserSettingsLine } from "react-icons/ri";
@@ -16,7 +16,6 @@ const Header = () => {
 
     useEffect(() => {
         const storedUserName = localStorage.getItem('name');
-        console.log(storedUserName);
         if (storedUserName) {
             setUserName(storedUserName);
         }
@@ -52,13 +51,11 @@ const Header = () => {
                         <Link to="/about" className='nav-link'>About</Link>
                         <Link to="/contact" className='nav-link'>Contact</Link>
                         <Link to="/product" className='nav-link'>Product</Link>
-                        <Link to="/address" className='nav-link'>Address</Link>
                         <Link to="/cart" className='nav-link'>Cart [0]</Link>
                     </nav>
                 </div>
                 <div className='nav-right'>
                     <div className='profile-container' onClick={toggleMenu} ref={menuRef}>
-                        <Link to="/register" className='nav-link'>Register</Link>
                         <CgProfile className='profile-icon' />
                         <span className='user-name'>{userName}</span>
                         {showMenu && (
@@ -80,9 +77,6 @@ const Header = () => {
                         )}
                     </div>
                 </div>
-            </div>
-            <div>
-                <Outlet />
             </div>
         </>
     );

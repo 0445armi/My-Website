@@ -9,14 +9,14 @@ const io = socketIo(server);
 //Create Product
 exports.createProduct = async (req, res) => {
     try {
-        const userId = req.user?._id;
+        const userId = req.user._id;
         const { name, price, category, quantity, addressId } = req.body;
         const productData = {
             name,
             price,
             category,
             quantity,
-            image: req.file?.filename, 
+            image: req.file.filename, 
             userId,
             addressId
         };
@@ -30,11 +30,11 @@ exports.createProduct = async (req, res) => {
 //Get Product
 exports.getProducts = async (req, res) => {
     try {
-        const userId = req.user?._id;
-        const { page = 1, limit = 10, search = '', sortBy = 'name', sortType = 'asc' } = req.query;
+        const userId = req.user._id;
+        const { page = 1, limit = 10, searchTerm = '', sortBy = 'name', sortType = 'asc' } = req.query;
         const parsedPage = parseInt(page, 10);
         const parsedLimit = parseInt(limit, 10);
-        const { products, totalPages } = await productService.fetchProducts(userId, parsedPage, parsedLimit, search, sortBy, sortType);
+        const { products, totalPages } = await productService.fetchProducts(userId, parsedPage, parsedLimit, searchTerm, sortBy, sortType);
         res.status(200).json({ products, totalPages });
     } catch (error) {   
         res.status(400).json({ message: error.message });

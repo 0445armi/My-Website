@@ -7,16 +7,17 @@ import {
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Register from './components/Auth/register';
-import Login from './components/Auth/login';
+import Register from './components/auth/register';
+import Login from './components/auth/login';
 import Home from './components/pages/home';
-import About from './components/about';
-import Product from './components/product';
-import Layout from './components/Layout/layout';
+import About from './components/pages/about';
+import Product from './components/pages/product';
+import Layout from './components/layout/layout';
 import PrivateRoute from './components/privateRoute';
-import Address from './components/address';
+import Address from './components/pages/address';
 import Contact from './components/pages/contact';
 import "./socket/socket";
+import Cart from './components/pages/cart';
 
 const App = () => {
   return (
@@ -63,6 +64,14 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <Address />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <PrivateRoute>
+                  <Cart />
                 </PrivateRoute>
               }
             />

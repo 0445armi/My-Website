@@ -1,23 +1,50 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/home.css"; 
-import { fetchProducts } from "../../axios/api"; 
+import "../../styles/home.css";
+import { fetchProducts } from "../../axios/api";
 import { BASE_URL } from "../../store/config";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:8080');
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
 
-    useEffect(() => {
-        const loadProducts = async () => {
-            try {
-                const fetchedProducts = await fetchProducts();
-                setProducts(fetchedProducts);
-            } catch (error) {
-                console.error("Error fetching products:", error.message);
-            }
-        };
+    const loadProducts = async () => {
+        try {
+            const response = await fetchProducts();
+            setProducts(response.products || []);
+        } catch (error) {
+            console.error("Error fetching products:", error.message);
+        }
+    };
 
+    useEffect(() => {
         loadProducts();
+
+        socket.on('newProduct', (newProduct) => {
+            setProducts((prevProducts) => [...prevProducts, newProduct]);
+        });
+
+        socket.on('updateProduct', (updatedProduct) => {
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product._id === updatedProduct._id ? updatedProduct : product
+                )
+            );
+        });
+
+        socket.on('deleteProduct', (deletedProductId) => {
+            setProducts((prevProducts) =>
+                prevProducts.filter((product) => product._id !== deletedProductId)
+            );
+        });
+
+        return () => {
+            socket.off('newProduct');
+            socket.off('updateProduct');
+            socket.off('deleteProduct');
+        };
     }, []);
 
     const addToCart = (product) => {
@@ -46,7 +73,7 @@ const Home = () => {
                         </div>
                     ))
                 ) : (
-                    <p>No Cards available</p>
+                    <div className="not">No Products Available</div>
                 )}
             </div>
         </div>

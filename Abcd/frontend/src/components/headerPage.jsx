@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../Layout/header';
+import Header from './Layout/header';
 import Product from '../product';
 
 const HeaderPage = () => {

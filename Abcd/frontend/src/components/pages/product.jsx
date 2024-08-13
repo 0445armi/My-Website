@@ -6,22 +6,22 @@ import {
     ErrorMessage
 } from "formik";
 import * as Yup from "yup";
-import "../styles/product.css";
+import "../../styles/product.css";
 import {
     deleteProduct,
     fetchProducts,
     createProduct,
     updateProduct
-} from "../axios/api";
+} from "../../axios/api";
 import {
     MdModeEdit,
     MdDelete
 } from "react-icons/md";
-import { BASE_URL } from "../store/config";
-import Pagination from "./pagination";
-// import io from 'socket.io-client';
+import { BASE_URL } from "../../store/config";
+import Pagination from "../pagination";
+import io from 'socket.io-client';
 
-// const socket = io('http://localhost:5175');
+const socket = io('http://localhost:8080');
 
 const validationSchema = Yup.object({
     name: Yup.string().required("name required"),
@@ -30,7 +30,7 @@ const validationSchema = Yup.object({
     quantity: Yup.number().required("quantity required").positive("quantity must be positive"),
 });
 
-const Product = () => {
+export const Product = () => {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
@@ -82,6 +82,7 @@ const Product = () => {
                     updateFormData.append(key, updatedFields[key]);
                 }
                 updatedProduct = await updateProduct(editingProduct._id, updateFormData);
+                socket.emit('updateProduct', updatedProduct);
                 setProducts((prevProducts) =>
                     prevProducts.map((product) =>
                         product._id === editingProduct._id ? updatedProduct : product
@@ -89,12 +90,12 @@ const Product = () => {
                 );
             } else {
                 updatedProduct = await createProduct(formData);
-                setProducts((prevProducts) => [...prevProducts, updatedProduct]);
+                socket.emit('newProduct', updatedProduct);
+                // setProducts((prevProducts) => [...prevProducts, updatedProduct]);
             }
             await loadProducts();
             setPopupVisible(false);
             resetForm();
-            socket.emit('newProduct', updatedProduct);
         } catch (error) {
             console.error('Error creating or updating product:', error.message);
         } finally {
@@ -111,6 +112,7 @@ const Product = () => {
         if (deletingProduct) {
             try {
                 await deleteProduct(deletingProduct._id);
+                socket.emit('deleteProduct', deletingProduct._id);
                 setProducts((prevProducts) => prevProducts.filter(product => product._id !== deletingProduct._id));
                 setDeleteConfirmVisible(false);
                 setDeletingProduct(null);
@@ -123,38 +125,43 @@ const Product = () => {
     const loadProducts = async (page = currentPage, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
         try {
             const response = await fetchProducts(page, searchTerm, sortBy, sortType);
-            setProducts(response.products || []);
-            setTotalPages(response.totalPages || 1);
+            if (response && response.products) {
+                setProducts(response.products);
+                setTotalPages(response.totalPages || 1);
+            } else {
+                setProducts([]); 
+                setTotalPages(1);
+            }
         } catch (error) {
             console.error('Error fetching products:', error.message);
         }
     };
 
     useEffect(() => {
-        loadProducts(currentPage, searchTerm);
-        // socket.on('newProduct', (newProduct) => {
-        //     if (newProduct?._id) {
-        //         setProducts((prevProducts) => [...prevProducts, newProduct]);
-        //     }
-        // });
-        // socket.on('updateProduct', (updatedProduct) => {
-        //     setProducts((prevProducts) =>
-        //         prevProducts.map((product) =>
-        //             product._id === updatedProduct._id ? updatedProduct : product
-        //         )
-        //     );
-        // });
-        // socket.on('deleteProduct', (deletedProductId) => {
-        //     setProducts((prevProducts) =>
-        //         prevProducts.filter((product) => product._id !== deletedProductId)
-        //     );
-        // });
-        // return () => {
-        //     socket.off('newProduct');
-        //     socket.off('updateProduct');
-        //     socket.off('deleteProduct');
-        // };
-    }, [currentPage]);
+        loadProducts(currentPage, searchTerm, sortBy, sortType);
+        socket.on('newProduct', (newProduct) => {
+            if (newProduct?._id) {
+                setProducts((prevProducts) => [...prevProducts, newProduct]);
+            }
+        });
+        socket.on('updateProduct', (updatedProduct) => {
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product._id === updatedProduct._id ? updatedProduct : product
+                )
+            );
+        });
+        socket.on('deleteProduct', (deletedProductId) => {
+            setProducts((prevProducts) =>
+                prevProducts.filter((product) => product._id !== deletedProductId)
+            );
+        });
+        return () => {
+            socket.off('newProduct');
+            socket.off('updateProduct');
+            socket.off('deleteProduct');
+        };
+    }, [currentPage, searchTerm, sortBy, sortType]);
 
     const cancelDelete = () => {
         setDeleteConfirmVisible(false);
@@ -178,7 +185,6 @@ const Product = () => {
             loadProducts(currentPage, searchTerm, field, newSortType); 
     };
     
-
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
         if (e.target.value === '') {
@@ -189,7 +195,7 @@ const Product = () => {
     const handleSearch = async (e) => {
         e.preventDefault();
         setCurrentPage(1);
-        loadProducts(1, searchTerm);
+        loadProducts(1, searchTerm, sortBy, sortType);
     };
 
     return (
@@ -211,10 +217,10 @@ const Product = () => {
                         <h2 className="h1">{isEdit ? "Edit Product" : "Create Product"}</h2>
                         <Formik
                             initialValues={{
-                                name: isEdit ? editingProduct.name : "",
-                                price: isEdit ? editingProduct.price : "",
-                                category: isEdit ? editingProduct.category : "",
-                                quantity: isEdit ? editingProduct.quantity : "",
+                                name: isEdit ? editingProduct?.name : "",
+                                price: isEdit ? editingProduct?.price : "",
+                                category: isEdit ? editingProduct?.category : "",
+                                quantity: isEdit ? editingProduct?.quantity : "",
                                 image: null,
                             }}
                             validationSchema={validationSchema}
@@ -311,8 +317,8 @@ const Product = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((product, index) => (
-                                <tr key={index}>
+                            {products.map((product) => (
+                                <tr key={product._id}>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
                                     <td>{product.category}</td>

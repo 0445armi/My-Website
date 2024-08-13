@@ -1,22 +1,18 @@
 import axios from 'axios';
-import io from 'socket.io-client';
 import { API_URL } from '../store/config';
-
-const socket = io('http://localhost:8080');
 
 const getToken = () => {
     return localStorage.getItem('jwtToken');
 };
 
 //Register User
-const registerUser = async (formData) => {
+const registerUser = async (userData) => {
     try {
-        const response = await axios.post(API_URL.REGISTER, formData, {
+        const response = await axios.post(API_URL.REGISTER, userData, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error message:', error.message);
@@ -24,7 +20,7 @@ const registerUser = async (formData) => {
     }
 };
 //Login User
-const loginUser = async ({email, password}) => {
+const loginUser = async ({ email, password }) => {
     try {
         const response = await axios.post(API_URL.LOGIN, { email, password });
         const { token } = response.data;
@@ -46,7 +42,7 @@ const createProduct = async (formData) => {
             },
         });
         const createdProduct = response.data;
-        socket.emit('newProduct', createdProduct);
+        console.log(createdProduct);
         return createdProduct;
     } catch (error) {
         console.error('Error message:', error.message);
@@ -54,7 +50,7 @@ const createProduct = async (formData) => {
     }
 };
 //Get Product
-const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
+const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc' ) => {
     try {
         const token = getToken();
         const response = await axios.get(API_URL.PRODUCTS, {
@@ -64,10 +60,10 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
             },
             params: {
                 page,
-                limit: 4, 
-                search: searchTerm,
+                limit: 4,
+                searchTerm,
                 sortBy,
-                sortType    
+                sortType
             },
         });
         return response.data;
@@ -85,7 +81,7 @@ const deleteProduct = async (id) => {
                 'Authorization': `Bearer ${token}`
             },
         });
-        socket.emit('deleteProduct', id);
+        return response.data;
     } catch (error) {
         console.error('Error deleting product:', error.message);
         throw error;
@@ -101,9 +97,7 @@ const updateProduct = async (id, formData) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        const updatedProduct = response.data;
-        socket.emit('updateProduct', updatedProduct);
-        return updatedProduct;
+        return response.data;
     } catch (error) {
         console.error('Error updating product:', error.message);
         throw error;
@@ -120,7 +114,7 @@ const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType
             },
             params: {
                 page,
-                limit: 4, 
+                limit: 4,
                 search: searchTerm,
                 sortBy,
                 sortType
@@ -180,12 +174,12 @@ const deleteAddress = async (id) => {
     }
 };
 
-export { 
-    registerUser, 
-    loginUser, 
-    fetchProducts, 
-    createProduct, 
-    deleteProduct, 
+export {
+    registerUser,
+    loginUser,
+    fetchProducts,
+    createProduct,
+    deleteProduct,
     updateProduct,
     fetchAddress,
     createAddress,

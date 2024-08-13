@@ -13,14 +13,6 @@ const requireSignIn = async (req, res, next) => {
             error,
             message: 'Invalid token' });
     }
-    // const token = req.headers.authorization?.split(' ')[1];
-    // if (!token) return res.status(401).json({ message: 'No token provided' });
-
-    // jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    //     if (err) return res.status(403).json({ message: 'Invalid token' });
-    //     req.user = { _id: user.userId };
-    //     next();
-    // });
 };
 
 const isAdmin = async (req, res, next) =>{
@@ -44,4 +36,15 @@ const isAdmin = async (req, res, next) =>{
     }
 }
 
-module.exports = {requireSignIn, isAdmin};
+const authenticateToken = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token' });
+        req.user = { _id: user.userId };
+        next();
+    });
+};
+
+module.exports = {requireSignIn, isAdmin, authenticateToken};

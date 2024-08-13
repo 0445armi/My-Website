@@ -2,7 +2,7 @@ const Product = require("../models/product");
 
 // Create Product
 const createProduct = async (productData) => {
-    const product = new Product({ ...productData });
+    const product = new Product(productData);
     await product.save();
     return product;
 };
@@ -10,9 +10,9 @@ const createProduct = async (productData) => {
 // Update Product
 const updateProduct = async (id, updateFields, file) => {
     if (file) {
-        updateFields.image = file.filename; 
-    }else {
-        delete updateFields.image; 
+        updateFields.image = file.filename;
+    } else {
+        delete updateFields.image;
     }
     const product = await Product.findByIdAndUpdate(id, updateFields, { new: true });
     if (!product) throw new Error('Product not found');
@@ -29,7 +29,7 @@ const deleteProduct = async (id) => {
 // Fetch Products
 const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
     const matchStage = search
-        ? { name: { $regex: new RegExp(search, 'i') },userId}
+        ? { name: {$regex: new RegExp(search, 'i')}, userId }
         : {};
     const sortStage = {
         [sortBy]: sortType === 'asc' ? 1 : -1,
@@ -43,35 +43,37 @@ const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
         { $limit: limitStage },
         {
             $lookup: {
-                from: 'addresses',            
-                localField: 'addressId',     
-                foreignField: 'addressId',      
-                as: 'address',            
+                from: 'addresses',
+                localField: 'addressId',
+                foreignField: '_id',
+                as: 'address',
             },
         },
         {
             $unwind: {
                 path: '$address',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {
             $lookup: {
-                from: 'users',                 
-                localField: 'address.userId',  
-                foreignField: '_id',           
-                as: 'address.user',            
+                from: 'users',
+                localField: 'address.userId',
+                foreignField: '_id',
+                as: 'address.user',
             },
         },
         {
             $unwind: {
-                path: '$address.user',         
+                path: '$address.user',
+                preserveNullAndEmptyArrays: true,
             },
         },
         {
             $project: {
-                'address.__v': 0,             
-                'address.user.password': 0,   
-                'address.user.__v': 0,        
+                'address.__v': 0,
+                'address.user.password': 0,
+                'address.user.__v': 0,
             },
         },
     ];
@@ -82,8 +84,8 @@ const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
 };
 
 module.exports = {
-    createProduct, 
-    updateProduct, 
-    deleteProduct, 
+    createProduct,
+    updateProduct,
+    deleteProduct,
     fetchProducts
 };
