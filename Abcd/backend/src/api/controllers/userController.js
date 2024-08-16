@@ -27,12 +27,13 @@ exports.loginController = async (req, res) => {
                 message: 'Invalid email or password',
             })
         }
-        const {token, userName, address, phone} = await userService.loginUser({ email, password });
+        const {token, userName, address, phone, role} = await userService.loginUser({ email, password });
         res.status(200).json({
             success: true,
             message: 'Successfully Login',
             user:{userName, email, address, phone},
             token,
+            role,
         });
     } catch (error) {
         res.status(500).json({
@@ -42,11 +43,3 @@ exports.loginController = async (req, res) => {
         });
     }
 };
-
-exports.testController = async (req, res) => {
-    try {
-        res.send("Protected Routes");
-    } catch (error) {
-        res.send({error});
-    }
-}

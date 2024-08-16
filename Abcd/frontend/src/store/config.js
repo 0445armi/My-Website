@@ -9,4 +9,5 @@ export const API_URL = {
     ADDRESSES: `${BASE_URL}/api/address`,
     DELETE_ADDRESS: (id) => `${BASE_URL}/api/address/${id}`,
     UPDATE_ADDRESS: (id) => `${BASE_URL}/api/address/${id}`,
+    CART: `${BASE_URL}/api/cart`,
 };

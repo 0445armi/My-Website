@@ -42,7 +42,6 @@ const createProduct = async (formData) => {
             },
         });
         const createdProduct = response.data;
-        console.log(createdProduct);
         return createdProduct;
     } catch (error) {
         console.error('Error message:', error.message);
@@ -50,7 +49,7 @@ const createProduct = async (formData) => {
     }
 };
 //Get Product
-const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc' ) => {
+const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
     try {
         const token = getToken();
         const response = await axios.get(API_URL.PRODUCTS, {
@@ -60,7 +59,7 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
             },
             params: {
                 page,
-                limit: 4,
+                limit: 6,
                 searchTerm,
                 sortBy,
                 sortType
@@ -103,29 +102,6 @@ const updateProduct = async (id, formData) => {
         throw error;
     }
 };
-// Fetch Addresses
-const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType = 'asc') => {
-    try {
-        const token = getToken();
-        const response = await axios.get(API_URL.ADDRESSES, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            params: {
-                page,
-                limit: 4,
-                search: searchTerm,
-                sortBy,
-                sortType
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching addresses:', error.message);
-        throw error;
-    }
-};
 // Create Address
 const createAddress = async (formData) => {
     try {
@@ -139,6 +115,29 @@ const createAddress = async (formData) => {
         return response.data;
     } catch (error) {
         console.error('Error creating address:', error.message);
+        throw error;
+    }
+};
+// Fetch Addresses
+const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType = 'asc') => {
+    try {
+        const token = getToken();
+        const response = await axios.get(API_URL.ADDRESSES, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            params: {
+                page,
+                limit: 6,
+                search: searchTerm,
+                sortBy,
+                sortType
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching addresses:', error.message);
         throw error;
     }
 };
@@ -169,7 +168,59 @@ const deleteAddress = async (id) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error deleting address:', error.message);
+        console.error('Error deleting address:', error.message);    
+        throw error;
+    }
+};
+//Add Cart
+const addToCart = async (productId, quantity) => {
+    try {
+        const token = getToken();
+        const response = await axios.post(API_URL.CART, { productId, quantity }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error adding to cart:", error.message);
+        throw error;
+    }
+};
+// Fetch Cart Items
+const fetchCartItems = async () => {
+    try {
+        const token = getToken();
+        const response = await axios.get(API_URL.CART, {
+            headers: { 
+                Authorization: `Bearer ${token}` 
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching cart items:", error.message);
+        throw error;
+    }
+};
+// Update Cart Item Quantity
+const updateCartQuantity = async (itemId, quantity) => {
+    try {
+        const token = getToken();
+        await axios.put(`${API_URL.CART}/${itemId}`, { quantity }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+    } catch (error) {
+        console.error("Error updating cart item:", error.message);
+        throw error;
+    }
+};
+// Remove Cart Item
+const removeCartItem = async (itemId) => {
+    try {
+        const token = getToken();
+        await axios.delete(`${API_URL.CART}/${itemId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+    } catch (error) {
+        console.error("Error removing item from cart:", error.message);
         throw error;
     }
 };
@@ -184,5 +235,9 @@ export {
     fetchAddress,
     createAddress,
     updateAddress,
-    deleteAddress
+    deleteAddress,
+    addToCart,
+    fetchCartItems,
+    updateCartQuantity,
+    removeCartItem
 };

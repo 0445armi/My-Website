@@ -18,9 +18,6 @@ import {
     MdDelete
 } from "react-icons/md";
 import Pagination from "../pagination";
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:8080');
 
 const validationSchema = Yup.object({
     city: Yup.string().required("City required"),
@@ -80,7 +77,6 @@ const Address = () => {
                     updateFormData.append(key, updatedFields[key]);
                 }
                 updatedAddress = await updateAddress(editingAddress._id, updatedFields);
-                socket.emit('updateAddress', updatedAddress);
                 setAddresses((prevAddresses) =>
                     prevAddresses.map((address) =>
                         address._id === editingAddress._id ? updatedAddress : address
@@ -88,7 +84,6 @@ const Address = () => {
                 );
             } else {
                 updatedAddress = await createAddress(values);
-                socket.emit('newAddress', updatedAddress);
                 setAddresses((prevAddresses) => [...prevAddresses, updatedAddress]);
             }
             await loadAddresses();
@@ -137,28 +132,6 @@ const Address = () => {
 
     useEffect(() => {
         loadAddresses(currentPage, searchTerm, sortBy, sortType);
-        socket.on('newAddress', (newAddress) => {
-            if (newAddress?._id) {
-                setAddresses((prevAddresses) => [...prevAddresses, newAddress]);
-            }
-        });
-        socket.on('updateAddress', (updatedAddress) => {
-            setAddresses((prevAddresses) =>
-                prevAddresses.map((Address) =>
-                    Address._id === updatedAddress._id ? updatedAddress : Address
-                )
-            );
-        });
-        socket.on('deleteAddress', (deletedAddressId) => {
-            setAddresses((prevAddresses) =>
-                prevAddresses.filter((Address) => Address._id !== deletedAddressId)
-            );
-        });
-        return () => {
-            socket.off('newAddress');
-            socket.off('updateAddress');
-            socket.off('deleteAddress');
-        };
     }, [currentPage]);
 
     const cancelDelete = () => {

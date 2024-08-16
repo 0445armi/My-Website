@@ -43,7 +43,7 @@ exports.getProducts = async (req, res) => {
 //Update Product
 exports.updateProduct = async (req, res) => {
     try {
-        const product = await productService.updateProduct(req.params.id, req.body);
+        const product = await productService.updateProduct(req.params.id, req.body, req.file);
         io.emit('updateProduct', product);
         res.status(200).json(product);
     } catch (error) {

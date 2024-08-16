@@ -16,10 +16,11 @@ const UserSchema = new mongoose.Schema({
     address: {
         type: String,
     },
-    role: {
-        type: Number,
-        default: 0,
-    }
+    role: { 
+        type: String, 
+        enum: ['User', 'Admin'], 
+        default: 'User'
+    },
 }, {
     timestamps: true, 
 });

@@ -19,14 +19,15 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
     phone: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
+    role: Yup.string().oneOf(['User', 'Admin']).required('Role is required'),
 });
 
 const Register = () => {
     const navigate = useNavigate();
+
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await registerUser(values);
-            console.log(response);
             toast.success('Registration successful!');
             resetForm();
             navigate('/login');
@@ -44,6 +45,7 @@ const Register = () => {
                     password: '',
                     phone: '',
                     address: '',
+                    role: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
@@ -100,6 +102,18 @@ const Register = () => {
                             <Field type="text" name="address" className="input" />
                             {errors.address && touched.address ? (
                                 <div className="error-message">{errors.address}</div>
+                            ) : null}
+                        </label>
+                        <br />
+                        <label className="c1">
+                            Role:
+                            <Field as="select" name="role" className="input">
+                                <option value="" label="Select role" />
+                                <option value="User" label="User" />
+                                <option value="Admin" label="Admin" />
+                            </Field>
+                            {errors.role && touched.role ? (
+                                <div className="error-message">{errors.role}</div>
                             ) : null}
                         </label>
                         <br />

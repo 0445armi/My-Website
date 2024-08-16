@@ -27,22 +27,6 @@ function initializeSocket(server) {
             socket.on("disconnect", () => {
                 console.log("User Disconnected:", socket.id);
             });
-            //address
-            socket.on("newAddress", (address) => {
-                io.emit("newAddress", address);
-            });
-
-            socket.on("updateAddress", (address) => {
-                io.emit("updateAddress", address);
-            });
-
-            socket.on("deleteAddress", (addressId) => {
-                io.emit("deleteAddress", addressId);
-            });
-
-            socket.on("disconnect", () => {
-                console.log("User Disconnected:", socket.id);
-            });
         });
     }
     return io;

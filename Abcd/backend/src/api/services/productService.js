@@ -83,9 +83,21 @@ const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
     return { products, totalPages };
 };
 
+//get product by Id 
+const getProductById = async (id) => {
+    try {
+        const product = await Product.findById(id);
+        return product;
+    } catch (error) {
+        console.error("Error fetching product by ID:", error.message);
+        throw error;
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
-    fetchProducts
+    fetchProducts,
+    getProductById
 };

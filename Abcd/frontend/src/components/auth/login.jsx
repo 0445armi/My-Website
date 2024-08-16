@@ -24,9 +24,9 @@ const Login = () => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await loginUser(values);
-            console.log('Response:', response);
             localStorage.setItem('jwtToken', response.token);
             localStorage.setItem('name', response.user.userName);
+            localStorage.setItem('role', response.role);
             toast.success('Login successful!');
             resetForm();
             navigate('/home');
@@ -58,6 +58,7 @@ const Login = () => {
                                 type="email"
                                 name="email"
                                 className={`input ${touched.email && errors.email ? 'error' : ''}`}
+                                autoComplete="email"
                             />
                             {errors.email && touched.email ? (
                                 <div className="error-message">{errors.email}</div>
@@ -70,6 +71,7 @@ const Login = () => {
                                 type="password"
                                 name="password"
                                 className={`input ${touched.password && errors.password ? 'error' : ''}`}
+                                autoComplete="current-password"
                             />
                             {errors.password && touched.password ? (
                                 <div className="error-message">{errors.password}</div>

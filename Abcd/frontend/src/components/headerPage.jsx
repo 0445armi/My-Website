@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Header from './Layout/header';
-import Product from '../product';
+import Header from './layout/header';
+import Product from './pages/product';
 
 const HeaderPage = () => {
     const [searchTerm, setSearchTerm] = useState('');

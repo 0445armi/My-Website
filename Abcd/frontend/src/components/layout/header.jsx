@@ -12,13 +12,16 @@ const Header = () => {
     const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState(false);
     const [userName, setUserName] = useState('');
+    const [isAdmin, setIsAdmin] = useState(false);
     const menuRef = useRef(null);
 
     useEffect(() => {
         const storedUserName = localStorage.getItem('name');
+        const userRole = localStorage.getItem('role');
         if (storedUserName) {
             setUserName(storedUserName);
         }
+        setIsAdmin(userRole === 'Admin');
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setShowMenu(false);
@@ -30,28 +33,30 @@ const Header = () => {
         };
     }, []);
 
-    const toggleMenu = () => {
-        setShowMenu(!showMenu);
-    }
+    const toggleMenu = () => setShowMenu(prev => !prev);
 
     const handleLogout = () => {
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('name');
+        localStorage.clear();
         toast.success('Logout successful!');
         navigate('/login');
     };
 
     return (
-        <>
             <div className='nav'>
                 <div className='nav-left'>
                     <nav className='nav-links'>
-                        <h3 to="/home" className='nav-links'>E-Commerce</h3>
+                        <h3 className='nav-links'>E-Commerce</h3>
                         <Link to="/home" className='nav-link'>Home</Link>
-                        <Link to="/about" className='nav-link'>About</Link>
-                        <Link to="/contact" className='nav-link'>Contact</Link>
-                        <Link to="/product" className='nav-link'>Product</Link>
-                        <Link to="/cart" className='nav-link'>Cart [0]</Link>
+                        {isAdmin ? (
+                            <Link to="/product" className='nav-link'>Product</Link>
+                        ) : (
+                            <>
+                                <Link to="/about" className='nav-link'>About</Link>
+                                <Link to="/contact" className='nav-link'>Contact</Link>
+                                <Link to="/address" className='nav-link'>Address</Link>
+                                <Link to="/cart" className='nav-link'>Cart [0]</Link>
+                            </>
+                        )}
                     </nav>
                 </div>
                 <div className='nav-right'>
@@ -78,7 +83,6 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-        </>
     );
 }
 
