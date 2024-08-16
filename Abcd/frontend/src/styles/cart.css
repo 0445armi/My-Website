@@ -19,19 +19,40 @@
 }
 
 .quantity-control {
-    margin-top: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .quantity-control input {
-    width: 50px;
-    padding: 5px;
+    width: 44px;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.quantity-buttons {
     margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.quantity-button {
+    border-radius: 28%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0px 10px;
+    cursor: pointer;
+}
+
+.quantity-button:hover {
+    background-color: #0056b3;
 }
 
 .btn1 {
+    margin-right: 10px;
     background-color: #007bff;
     color: white;
-    padding: 10px 15px;
+    padding: 6px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;

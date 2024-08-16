@@ -5,7 +5,7 @@ const { authenticateToken } = require('../middleware/auth');
 
 router.post('/cart', authenticateToken, cartController.addToCart);
 router.get('/cart', authenticateToken, cartController.getCartItems);
-router.put('/cart/:itemId',authenticateToken, cartController.updateCartItemQuantity);
-router.delete('/cart/:itemId',authenticateToken, cartController.removeCartItem);
+router.put('/cart/:productId',authenticateToken, cartController.updateCartItemQuantity);
+router.delete('/cart/:productId',authenticateToken, cartController.removeCartItem);
 
 module.exports = router;

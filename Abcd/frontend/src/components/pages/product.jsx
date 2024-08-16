@@ -62,6 +62,7 @@ export const Product = () => {
         if (values.image) {
             formData.append('image', values.image);
         }
+        console.log(values.image);
         try {
             let updatedProduct;
             if (isEdit && editingProduct) {

@@ -10,4 +10,8 @@ export const API_URL = {
     DELETE_ADDRESS: (id) => `${BASE_URL}/api/address/${id}`,
     UPDATE_ADDRESS: (id) => `${BASE_URL}/api/address/${id}`,
     CART: `${BASE_URL}/api/cart`,
+    DELETE_CART: (id) => `${BASE_URL}/api/cart/${id}`,
+    UPDATE_CART: (id) => `${BASE_URL}/api/cart/${id}`,
+    ORDER: `${BASE_URL}/api/create-order`,
+    PAYMENT : `${BASE_URL}/verify-payment`
 };

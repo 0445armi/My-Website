@@ -1,64 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../store/config';
-import { fetchCartItems, updateCartQuantity, removeCartItem, addToCart } from '../../axios/api.js';
+import "../../styles/cart.css";
+import { fetchCartItems, updateCartQuantity, removeCartItem, createOrder } from '../../axios/api.js';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const handleAddToCart = async (productId, quantity) => {
+    const fetchItems = async () => {
         try {
-            await addToCart(productId, quantity);
-            const updatedItems = await fetchCartItems();
-            setCartItems(updatedItems.products || updatedItems);
+            const items = await fetchCartItems();
+            setCartItems(items.products || items);
         } catch (error) {
-            console.error("Error adding to cart:", error.message);
+            console.error("Error fetching cart items:", error.message);
+        }
+    };
+    
+    const handleIncreaseQuantity = async (productId, currentQuantity) => {
+        try {
+            const newQuantity = currentQuantity + 1;
+            await updateCartQuantity(productId, newQuantity);
+            setCartItems(prevItems =>
+                prevItems.map(item =>
+                    item.productId._id === productId
+                        ? { ...item, quantity: newQuantity }
+                        : item
+                )
+            );
+        } catch (error) {
+            console.error("Error increasing quantity:", error.message);
         }
     };
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const items = await fetchCartItems();
-                setCartItems(items.products || items);
-            } catch (error) {
-                console.error("Error fetching cart items:", error.message);
-            }
-        };
-        fetchItems();
-    }, []);
-
-    const handleUpdateQuantity = async (itemId, quantity) => {
+    const handleDecreaseQuantity = async (productId, currentQuantity) => {
+        if (currentQuantity <= 1) return; 
         try {
-            console.log('Updating quantity for itemId:', itemId, 'to:', quantity);
-            await updateCartQuantity(itemId, quantity);
-            const updatedItems = await fetchCartItems();
-            setCartItems(updatedItems.products || updatedItems);
+            const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
+            await updateCartQuantity(productId, newQuantity);
+            setCartItems(prevItems =>
+                prevItems.map(item =>
+                    item.productId._id === productId
+                        ? { ...item, quantity: newQuantity }
+                        : item
+                )
+            );
         } catch (error) {
-            console.error("Error updating cart item:", error.message);
+            console.error("Error decreasing quantity:", error.message);
         }
     };
 
-    const handleRemoveItem = async (itemId) => {
+    const handleRemoveItem = async (productId) => {
         try {
-            await removeCartItem(itemId);
-            setCartItems(cartItems.filter(item => item.productId._id !== itemId));
+            await removeCartItem(productId);
+            setCartItems(prevItems => prevItems.filter(item => item.productId._id !== productId));
         } catch (error) {
             console.error("Error removing item from cart:", error.message);
         }
     };
-
-    const handleBuyNow = () => {
-        navigate("/checkout");
+    
+    const handleBuyNow = async (productId) => {
+        // navigate(`/checkout/${productId}`);
+        const product = cartItems.find(item => item.productId._id === productId);
+        if (!product) return;
+        const { name, price } = product.productId;
+        const amount = price * 100; 
+        try {
+            const order = await createOrder(amount);
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+                amount: order.amount,
+                currency: order.currency,
+                name,
+                description: "Test Transaction",
+                order_id: order.id,
+                handler: async (response) => {
+                    try {
+                        const paymentData = {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        };
+                        const result = await verifyPayment(paymentData);
+                        if (result.success) {
+                            alert("Payment successful!");
+                        } else {
+                            alert("Payment verification failed.");
+                        }
+                    } catch (error) {
+                        console.error("Error verifying payment:", error.message);
+                    }
+                },
+                prefill: {
+                    name: "Your Name",
+                    email: "email@example.com",
+                    contact: "9999999999",
+                },
+                notes: {
+                    address: "Razorpay Corporate Office",
+                },
+                theme: {
+                    color: "#3399cc",
+                },
+            };
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+        } catch (error) {
+            console.error("Error in payment process:", error.message);
+        }
     };
+    
+    useEffect(() => {
+        fetchItems();
+    }, []);
 
-
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('IN', {
+            style: 'currency',
+            currency: 'INR',
+        }).format(amount);
+    };
+    
     return (
         <div className="cart-container">
             {cartItems.length > 0 ? (
                 cartItems.map((item) => {
-                    const product = item.product || {};
+                    const product = item.productId || {};
+                    const price = parseFloat(item.productId.price) || 0;
+                    const totalPrice = price * item.quantity;
                     return (
                         <div key={item.productId._id} className="cart-item">
                             <img
@@ -68,28 +137,38 @@ const Cart = () => {
                             />
                             <div className="cart-item-details">
                                 <h2>{item.productId.name}</h2>
-                                <p>Price: {item.productId.price}</p>
+                                <p>Price: {formatCurrency(price)}</p>
+                                <p>Total: {formatCurrency(totalPrice)}</p>
                                 <p>Category: {item.productId.category}</p>
                                 <div className="quantity-control">
                                     <label htmlFor={`quantity-${item.productId._id}`}>Quantity:</label>
-                                    <input
-                                        type="number"
-                                        id={`quantity-${item.productId._id}`}
-                                        value={item.quantity}
-                                        min="1"
-                                        onChange={(e) => handleUpdateQuantity(item.productId._id, e.target.value)}
-                                    />
+                                    <div className="quantity-buttons">
+                                        <button 
+                                            onClick={() => handleDecreaseQuantity(item.productId._id, item.quantity)} 
+                                            className="quantity-button"
+                                        >-</button> 
+                                        <input
+                                            type="number"
+                                            id={`quantity-${item.productId._id}`}
+                                            value={item.quantity}
+                                            min="1"
+                                            readOnly
+                                        />
+                                        <button 
+                                            onClick={() => handleIncreaseQuantity(item.productId._id, item.quantity)} 
+                                            className="quantity-button"
+                                        >+</button>
+                                    </div>
                                 </div>
                             </div>
                             <button onClick={() => handleRemoveItem(item.productId._id)} className="btn1">Remove</button>
-                            <button onClick={() => handleAddToCart(item.productId._id, item.quantity)} className="btn1">Add More</button> {/* Example button for adding more */}
+                            <button onClick={() => handleBuyNow(item.productId._id)} className="btn1 buy-now">Buy Now</button>
                         </div>
                     );
                 })
             ) : (
                 <div className="not">Your Cart is Empty</div>
             )}
-            <button onClick={handleBuyNow} className="btn1">Buy Now</button>
         </div>
     );
 };

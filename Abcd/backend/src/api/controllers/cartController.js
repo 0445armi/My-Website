@@ -4,6 +4,10 @@ const cartServices = require('../services/cartService');
 exports.addToCart = async (req, res) => {
     try {
         const { productId, quantity } = req.body;
+        console.log('Received productId:', productId, 'and quantity:', quantity);
+        if (!productId || !quantity) {
+            return res.status(400).json({ message: 'Product ID and quantity are required' });
+        }
         const userId = req.user.id;
         const cart = await cartServices.addToCart({ productId, quantity, userId });
         res.status(200).json({ message: 'Product added to cart successfully', cart });
@@ -26,7 +30,11 @@ exports.getCartItems = async (req, res) => {
 // Update Cart Item Quantity
 exports.updateCartItemQuantity = async (req, res) => {
     try {
-        const { productId, quantity } = req.body;
+        const { productId } = req.params;
+        const { quantity } = req.body;
+        if (!productId || quantity === undefined) {
+            return res.status(400).json({ message: 'Product ID and quantity are required' });
+        }
         const userId = req.user.id;
         const cart = await cartServices.updateCartItemQuantity({ productId, quantity, userId });
         res.status(200).json({ message: 'Cart item quantity updated successfully', cart });
@@ -38,7 +46,10 @@ exports.updateCartItemQuantity = async (req, res) => {
 // Remove Item from Cart
 exports.removeCartItem = async (req, res) => {
     try {
-        const { productId } = req.body;
+        const { productId } = req.params;
+        if (!productId) {
+            return res.status(400).json({ message: 'Product ID is required' });
+        }
         const userId = req.user.id;
         console.log('Removing product with ID:', productId);
         const cart = await cartServices.removeCartItem({ productId, userId });

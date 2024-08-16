@@ -5,7 +5,7 @@ const getToken = () => {
     return localStorage.getItem('jwtToken');
 };
 
-//Register User
+// Register User
 const registerUser = async (userData) => {
     try {
         const response = await axios.post(API_URL.REGISTER, userData, {
@@ -19,7 +19,7 @@ const registerUser = async (userData) => {
         throw error;
     }
 };
-//Login User
+// Login User
 const loginUser = async ({ email, password }) => {
     try {
         const response = await axios.post(API_URL.LOGIN, { email, password });
@@ -31,7 +31,7 @@ const loginUser = async ({ email, password }) => {
         throw error;
     }
 };
-//Create Product
+// Create Product
 const createProduct = async (formData) => {
     try {
         const token = getToken();
@@ -48,7 +48,7 @@ const createProduct = async (formData) => {
         throw error;
     }
 };
-//Get Product
+// Get Product
 const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
     try {
         const token = getToken();
@@ -71,7 +71,7 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
         throw error;
     }
 };
-//Delete Product
+// Delete Product
 const deleteProduct = async (id) => {
     try {
         const token = getToken();
@@ -86,7 +86,7 @@ const deleteProduct = async (id) => {
         throw error;
     }
 };
-//Update Product
+// Update Product
 const updateProduct = async (id, formData) => {
     try {
         const token = getToken();
@@ -172,7 +172,7 @@ const deleteAddress = async (id) => {
         throw error;
     }
 };
-//Add Cart
+// Add Cart
 const addToCart = async (productId, quantity) => {
     try {
         const token = getToken();
@@ -185,7 +185,7 @@ const addToCart = async (productId, quantity) => {
         throw error;
     }
 };
-// Fetch Cart Items
+// Fetch Cart 
 const fetchCartItems = async () => {
     try {
         const token = getToken();
@@ -200,27 +200,53 @@ const fetchCartItems = async () => {
         throw error;
     }
 };
-// Update Cart Item Quantity
-const updateCartQuantity = async (itemId, quantity) => {
+// Update Cart 
+const updateCartQuantity = async (productId, quantity) => {
     try {
         const token = getToken();
-        await axios.put(`${API_URL.CART}/${itemId}`, { quantity }, {
+        const response = await axios.put(API_URL.UPDATE_CART(productId), { quantity }, {
             headers: { Authorization: `Bearer ${token}` }
         });
+        return response.data;
     } catch (error) {
         console.error("Error updating cart item:", error.message);
         throw error;
     }
 };
-// Remove Cart Item
-const removeCartItem = async (itemId) => {
+// Remove Cart 
+const removeCartItem = async (productId) => {
     try {
         const token = getToken();
-        await axios.delete(`${API_URL.CART}/${itemId}`, {
+        const response = await axios.delete(API_URL.DELETE_CART(productId), {
             headers: { Authorization: `Bearer ${token}` }
         });
+        return response.data;
     } catch (error) {
         console.error("Error removing item from cart:", error.message);
+        throw error;
+    }
+};
+//Order Create
+const createOrder = async (amount, productId) => {
+    try {
+        const response = await axios.post(API_URL.ORDER, {
+            amount,
+            currency: 'INR',
+            receipt: `receipt_${productId || 'default'}`,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error creating order:", error.message);
+        throw error;
+    }
+};
+//Verify Payment
+const verifyPayment = async (paymentData) => {
+    try {
+        const response = await axios.post(API_URL.PAYMENT, paymentData);
+        return response.data;
+    } catch (error) {
+        console.error("Error verifying payment:", error.message);
         throw error;
     }
 };
@@ -239,5 +265,7 @@ export {
     addToCart,
     fetchCartItems,
     updateCartQuantity,
-    removeCartItem
+    removeCartItem,
+    createOrder,
+    verifyPayment
 };

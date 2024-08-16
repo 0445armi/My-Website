@@ -5,7 +5,6 @@ const { getProductById } = require('../services/productService');
 const addToCart = async ({ productId, quantity, userId }) => {
     const product = await getProductById(productId);
     if (!product) throw new Error('Product not found');
-
     let cart = await Cart.findOne({ userId });
     if (!cart) {
         cart = new Cart({ userId, products: [{ productId, quantity }] });
@@ -48,7 +47,6 @@ const removeCartItem = async ({ productId, userId }) => {
     console.log('Removing product with ID:', productId, 'for user:', userId);
     const cart = await Cart.findOne({ userId });
     if (!cart) throw new Error('Cart not found');
-
     const updatedProducts = cart.products.filter(p => p.productId.toString() !== productId);
     if (updatedProducts.length === cart.products.length) {
         throw new Error('Product not found in cart');
