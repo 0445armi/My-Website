@@ -88,7 +88,7 @@ const Register = () => {
                                 <div className="error-message">{errors.password}</div>
                             ) : null}
                         </label>
-                        <br />
+                        <br /> 
                         <label className="c1">
                             Phone:
                             <Field type="text" name="phone" className="input" />

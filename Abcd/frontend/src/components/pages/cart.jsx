@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../store/config';
 import "../../styles/cart.css";
 import { fetchCartItems, updateCartQuantity, removeCartItem, createOrder } from '../../axios/api.js';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
-    // const navigate = useNavigate();
 
     const fetchItems = async () => {
         try {
@@ -60,15 +58,14 @@ const Cart = () => {
     };
     
     const handleBuyNow = async (productId) => {
-        // navigate(`/checkout/${productId}`);
         const product = cartItems.find(item => item.productId._id === productId);
         if (!product) return;
         const { name, price } = product.productId;
         const amount = price * 100; 
         try {
-            const order = await createOrder(amount);
+            const order = await createOrder(amount, productId);
             const options = {
-                key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: order.amount,
                 currency: order.currency,
                 name,
@@ -92,15 +89,15 @@ const Cart = () => {
                     }
                 },
                 prefill: {
-                    name: "Your Name",
-                    email: "email@example.com",
-                    contact: "9999999999",
+                    name: "",
+                    email: "",
+                    contact: "",
                 },
                 notes: {
-                    address: "Razorpay Corporate Office",
+                    address: "",
                 },
                 theme: {
-                    color: "#3399cc",
+                    color: "#007bff",
                 },
             };
             const paymentObject = new window.Razorpay(options);
@@ -115,9 +112,9 @@ const Cart = () => {
     }, []);
 
     const formatCurrency = (amount) => {
-        return new Intl.NumberFormat('IN', {
-            style: 'currency',
+        return new Intl.NumberFormat('en-IN', {
             currency: 'INR',
+            minimumFractionDigits: 2,
         }).format(amount);
     };
     
@@ -137,8 +134,8 @@ const Cart = () => {
                             />
                             <div className="cart-item-details">
                                 <h2>{item.productId.name}</h2>
-                                <p>Price: {formatCurrency(price)}</p>
-                                <p>Total: {formatCurrency(totalPrice)}</p>
+                                <p>Price: ₹{formatCurrency(price)}</p>
+                                <p>Total: ₹{formatCurrency(totalPrice)}</p>
                                 <p>Category: {item.productId.category}</p>
                                 <div className="quantity-control">
                                     <label htmlFor={`quantity-${item.productId._id}`}>Quantity:</label>

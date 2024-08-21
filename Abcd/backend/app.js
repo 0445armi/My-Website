@@ -6,7 +6,7 @@ const userRoutes = require('./src/api/routes/userRouter');
 const addressRoutes = require('./src/api/routes/addressRouter');
 const productRoutes = require('./src/api/routes/productRouter');
 const cartRoutes = require('./src/api/routes/cartRouter');
-const orderRoutes = require('./src/api/routes/orderRoutes')
+const orderRoutes = require('./src/api/routes/paymentRoutes')
 const path = require('path');
 const upload = require('./src/utils/fileUploadUtil');
 const initializeSocket = require('./src/utils/socket');
@@ -14,7 +14,7 @@ const initializeSocket = require('./src/utils/socket');
 const app = express();
 const server = http.createServer(app);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));

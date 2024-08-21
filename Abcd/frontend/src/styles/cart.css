@@ -1,15 +1,15 @@
 .cart-container {
-    padding: 20px;
+    padding-left: 30px;
 }
 
 .cart-item {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .cart-item-image {
-    width: 100px;
+    width: 350px;
     height: auto;
     margin-right: 20px;
 }
@@ -49,7 +49,7 @@
 }
 
 .btn1 {
-    margin-right: 10px;
+    margin-right: 20px;
     background-color: #007bff;
     color: white;
     padding: 6px 15px;

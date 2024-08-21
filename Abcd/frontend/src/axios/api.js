@@ -41,8 +41,7 @@ const createProduct = async (formData) => {
                 'Content-Type': 'multipart/form-data'
             },
         });
-        const createdProduct = response.data;
-        return createdProduct;
+        return response.data;
     } catch (error) {
         console.error('Error message:', error.message);
         throw error;
@@ -92,8 +91,8 @@ const updateProduct = async (id, formData) => {
         const token = getToken();
         const response = await axios.put(API_URL.UPDATE(id), formData, {
             headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
             },
         });
         return response.data;
@@ -177,7 +176,9 @@ const addToCart = async (productId, quantity) => {
     try {
         const token = getToken();
         const response = await axios.post(API_URL.CART, { productId, quantity }, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { 
+                Authorization: `Bearer ${token}` 
+            }
         });
         return response.data;
     } catch (error) {
@@ -205,7 +206,9 @@ const updateCartQuantity = async (productId, quantity) => {
     try {
         const token = getToken();
         const response = await axios.put(API_URL.UPDATE_CART(productId), { quantity }, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {
+                Authorization: `Bearer ${token}` 
+            }
         });
         return response.data;
     } catch (error) {
@@ -218,7 +221,9 @@ const removeCartItem = async (productId) => {
     try {
         const token = getToken();
         const response = await axios.delete(API_URL.DELETE_CART(productId), {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { 
+                Authorization: `Bearer ${token}` 
+            }
         });
         return response.data;
     } catch (error) {
