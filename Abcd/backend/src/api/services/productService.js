@@ -6,7 +6,6 @@ const createProduct = async (productData) => {
     await product.save();
     return product;
 };
-
 // Update Product
 const updateProduct = async (id, updateFields, file) => {
     if (file) {
@@ -18,14 +17,12 @@ const updateProduct = async (id, updateFields, file) => {
     if (!product) throw new Error('Product not found');
     return product;
 };
-
 // Delete Product
 const deleteProduct = async (id) => {
     const result = await Product.findByIdAndDelete(id);
     if (!result) throw new Error('Product not found');
     return result;
 };
-
 // Fetch Products
 const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
     const matchStage = search
@@ -82,7 +79,6 @@ const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
     const totalPages = Math.ceil(totalProducts / limit);
     return { products, totalPages };
 };
-
 //get product by Id 
 const getProductById = async (id) => {
     try {

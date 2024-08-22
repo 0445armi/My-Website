@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/home.css";
 import { addToCart, fetchProducts } from "../../axios/api";
 import { BASE_URL } from "../../store/config";
+import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 
 const socket = io('http://localhost:8080');
 
-const Home = () => {
+export const Home = () => {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
@@ -46,8 +47,14 @@ const Home = () => {
 
     const handleAddToCart = async (product) => {
         try {
-            await addToCart(product._id, 1); 
-            navigate("/cart");
+            await addToCart(product._id, 1);
+            const token = localStorage.getItem('jwtToken');
+            const userRole = localStorage.getItem("role");
+            if (userRole === "Admin") {
+                toast.warning("Admin cannot access the cart.");
+            } else {
+                navigate("/cart");
+            }
         } catch (error) {
             console.error("Error adding to cart:", error.message);
         }

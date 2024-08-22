@@ -24,10 +24,10 @@ import io from 'socket.io-client';
 const socket = io('http://localhost:8080');
 
 const validationSchema = Yup.object({
-    name: Yup.string().required("name required"),
-    price: Yup.number().required("price required").positive("price must be positive"),
-    category: Yup.string().required("category required"),
-    quantity: Yup.number().required("quantity required").positive("quantity must be positive"),
+    name: Yup.string().required("Name required"),
+    price: Yup.number().required("Price required").positive("Price must be positive"),
+    category: Yup.string().required("Category required"),
+    quantity: Yup.number().required("Quantity required").positive("Quantity must be positive"),
 });
 
 export const Product = () => {
@@ -62,7 +62,6 @@ export const Product = () => {
         if (values.image) {
             formData.append('image', values.image);
         }
-        console.log(values.image);
         try {
             let updatedProduct;
             if (isEdit && editingProduct) {
@@ -139,7 +138,7 @@ export const Product = () => {
     };
 
     useEffect(() => {
-        loadProducts(currentPage, searchTerm, sortBy, sortType);
+        loadProducts(currentPage);
         socket.on('newProduct', (newProduct) => {
             if (newProduct?._id) {
                 setProducts((prevProducts) => [...prevProducts, newProduct]);
@@ -162,7 +161,7 @@ export const Product = () => {
             socket.off('updateProduct');
             socket.off('deleteProduct');
         };
-    }, [currentPage, searchTerm, sortBy, sortType]);
+    }, [currentPage]);
 
     const cancelDelete = () => {
         setDeleteConfirmVisible(false);

@@ -55,14 +55,14 @@
 }
 
 .footer-social-icon {
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: 24px;
     margin-right: 10px;
     text-decoration: none;
 }
 
 .footer-social-icon:hover {
-    color: #ccc;
+    color:rgb(84, 84, 232);
 }
 
 .footer-bottom {

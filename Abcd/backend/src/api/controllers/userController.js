@@ -1,4 +1,5 @@
 const userService = require('../services/userService');
+const jwt = require('jsonwebtoken');
 
 //Register
 exports.registerController = async (req, res) => {
@@ -28,11 +29,15 @@ exports.loginController = async (req, res) => {
             })
         }
         const {token, userName, address, phone, role} = await userService.loginUser({ email, password });
+        res.cookie('token', token, {
+            httpOnly: true, 
+            secure: false, 
+        });
         res.status(200).json({
             success: true,
             message: 'Successfully Login',
             user:{userName, email, address, phone},
-            token,
+            // token,
             role,
         });
     } catch (error) {

@@ -6,23 +6,20 @@ const createAddress = async (addressData) => {
     await address.save();
     return address;
 };
-
 // Update Address
 const updateAddress = async (id, updateFields) => {
     const address = await Address.findByIdAndUpdate(id, updateFields, { new: true });
     if (!address) throw new Error('Address not found');
     return address;
 };
-
 // Delete Address
 const deleteAddress = async (id) => {
     const result = await Address.findByIdAndDelete(id);
     if (!result) throw new Error('Address not found');
     return result;
 };
-
 // Fetch Address
-const fetchAddress = async (userId, page, limit, search, sortBy, sortType) => {
+const fetchAddress = async (userId, page, limit, sortBy, search, sortType) => {
     page = parseInt(page, 10) || 1;
     limit = parseInt(limit, 10) || 10;
     const matchStage = search

@@ -11,7 +11,6 @@ exports.createAddress = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-
 //Get Address
 exports.getAddress = async (req, res) => {
     try {
@@ -22,7 +21,6 @@ exports.getAddress = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-
 //Update Address
 exports.updateAddress = async (req, res) => {
     try {
@@ -32,7 +30,6 @@ exports.updateAddress = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-
 //Delete Address
 exports.deleteAddress = async (req, res) => {
     try {
@@ -42,4 +39,3 @@ exports.deleteAddress = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-

@@ -19,14 +19,12 @@ const addToCart = async ({ productId, quantity, userId }) => {
     await cart.save();
     return cart;
 };
-
 // Fetch Cart Items
 const fetchCartItems = async (userId) => {
     const cart = await Cart.findOne({ userId }).populate('products.productId');
     if (!cart) throw new Error('Cart not found');
     return cart.products;
 };
-
 // Update Cart Item Quantity
 const updateCartItemQuantity = async ({ productId, quantity, userId }) => {
     const cart = await Cart.findOne({ userId });
@@ -41,10 +39,8 @@ const updateCartItemQuantity = async ({ productId, quantity, userId }) => {
         throw new Error('Product not found in cart');
     }
 };
-
 // Remove Item from Cart
 const removeCartItem = async ({ productId, userId }) => {
-    console.log('Removing product with ID:', productId, 'for user:', userId);
     const cart = await Cart.findOne({ userId });
     if (!cart) throw new Error('Cart not found');
     const updatedProducts = cart.products.filter(p => p.productId.toString() !== productId);

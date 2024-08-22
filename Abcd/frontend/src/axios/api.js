@@ -23,8 +23,9 @@ const registerUser = async (userData) => {
 const loginUser = async ({ email, password }) => {
     try {
         const response = await axios.post(API_URL.LOGIN, { email, password });
-        const { token } = response.data;
+        const { token, role } = response.data;
         localStorage.setItem('jwtToken', token);
+        localStorage.setItem('role', role);
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error.message);
