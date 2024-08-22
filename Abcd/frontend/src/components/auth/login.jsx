@@ -18,15 +18,15 @@ const validationSchema = Yup.object().shape({
     password: Yup.string().required('password is required').min(6, 'Password must be at least 6 characters'),
 });
 
-const Login = () => {
+export const Login = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            const response = await loginUser(values);
-            localStorage.setItem('jwtToken', response.token);
-            localStorage.setItem('name', response.user.userName);
-            localStorage.setItem('role', response.role);
+            await loginUser(values);
+            // localStorage.setItem('jwtToken', response.token);
+            // localStorage.setItem('name', response.user.userName);
+            // localStorage.setItem('role', response.role);
             toast.success('Login successful!');
             resetForm();
             navigate('/home');
@@ -36,7 +36,7 @@ const Login = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('jwtToken');
+        const token = localStorage.getItem('token');
         if (token) {
             navigate('/home');
         }

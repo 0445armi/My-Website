@@ -21,7 +21,7 @@ import { BASE_URL } from "../../store/config";
 import Pagination from "../pagination";
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:8080');
+const socket = io('http://localhost:8000');
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Name required"),

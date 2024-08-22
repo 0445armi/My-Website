@@ -6,7 +6,7 @@ import { BASE_URL } from "../../store/config";
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:8080');
+const socket = io('http://localhost:8000');
 
 export const Home = () => {
     const [products, setProducts] = useState([]);

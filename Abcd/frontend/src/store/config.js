@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8080';
+export const BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8000';
 
 export const API_URL = {
     REGISTER: `${BASE_URL}/api/register`,

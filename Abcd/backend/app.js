@@ -15,13 +15,16 @@ const app = express();
 const server = http.createServer(app);
 
 app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 initializeSocket(server);
-
 connectDB();
+
 app.use('/api', userRoutes);
 app.use('/api', addressRoutes);
 app.use('/api', productRoutes);
@@ -29,5 +32,5 @@ app.use('/api', cartRoutes);
 app.use('/api', orderRoutes);
 app.use(upload.any());
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

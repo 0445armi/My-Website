@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { API_URL } from '../store/config';
 
-const getToken = () => {
-    return localStorage.getItem('jwtToken');
-};
+// const getToken = () => {
+//     return localStorage.getItem('jwtToken');
+// };
 
 // Register User
 const registerUser = async (userData) => {
@@ -12,6 +12,7 @@ const registerUser = async (userData) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -22,10 +23,14 @@ const registerUser = async (userData) => {
 // Login User
 const loginUser = async ({ email, password }) => {
     try {
-        const response = await axios.post(API_URL.LOGIN, { email, password });
-        const { token, role } = response.data;
-        localStorage.setItem('jwtToken', token);
+        const response = await axios.post(API_URL.LOGIN, { email, password }, {
+            withCredentials: true,
+        });
+        const {role, user: { userName }, token } = response.data;
+        // localStorage.setItem('jwtToken', token);
         localStorage.setItem('role', role);
+        localStorage.setItem('name', userName);
+        console.log("token", token);
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error.message);
@@ -35,12 +40,13 @@ const loginUser = async ({ email, password }) => {
 // Create Product
 const createProduct = async (formData) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.post(API_URL.PRODUCTS, formData, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                // // 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -51,12 +57,13 @@ const createProduct = async (formData) => {
 // Get Product
 const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.get(API_URL.PRODUCTS, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                // 'Authorization': `Bearer ${token}`,
             },
+            withCredentials: true,
             params: {
                 page,
                 limit: 6,
@@ -74,11 +81,12 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
 // Delete Product
 const deleteProduct = async (id) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.delete(API_URL.DELETE(id), {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
+            // headers: {
+            //     'Authorization': `Bearer ${token}`
+            // },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -89,12 +97,13 @@ const deleteProduct = async (id) => {
 // Update Product
 const updateProduct = async (id, formData) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.put(API_URL.UPDATE(id), formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`,
+                // // 'Authorization': `Bearer ${token}`,
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -105,12 +114,13 @@ const updateProduct = async (id, formData) => {
 // Create Address
 const createAddress = async (formData) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.post(API_URL.ADDRESSES, formData, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                // // 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -121,10 +131,10 @@ const createAddress = async (formData) => {
 // Fetch Addresses
 const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType = 'asc') => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.get(API_URL.ADDRESSES, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                // // 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             params: {
@@ -134,6 +144,7 @@ const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType
                 sortBy,
                 sortType
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -144,12 +155,13 @@ const fetchAddress = async (page = 1, searchTerm = '', sortBy = 'city', sortType
 // Update Address
 const updateAddress = async (id, formData) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.put(API_URL.UPDATE_ADDRESS(id), formData, {
             headers: {
-                'Authorization': `Bearer ${token}`,
+                // // 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -160,11 +172,12 @@ const updateAddress = async (id, formData) => {
 // Delete Address
 const deleteAddress = async (id) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.delete(API_URL.DELETE_ADDRESS(id), {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
+            // headers: {
+            //     // 'Authorization': `Bearer ${token}`,
+            // },
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -175,11 +188,12 @@ const deleteAddress = async (id) => {
 // Add Cart
 const addToCart = async (productId, quantity) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.post(API_URL.CART, { productId, quantity }, {
-            headers: { 
-                Authorization: `Bearer ${token}` 
-            }
+            // headers: { 
+            //     Authorization: `Bearer ${token}` 
+            // }
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -190,11 +204,12 @@ const addToCart = async (productId, quantity) => {
 // Fetch Cart 
 const fetchCartItems = async () => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.get(API_URL.CART, {
-            headers: { 
-                Authorization: `Bearer ${token}` 
-            }
+            // headers: { 
+            //     Authorization: `Bearer ${token}` 
+            // }
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -207,9 +222,10 @@ const updateCartQuantity = async (productId, quantity) => {
     try {
         const token = getToken();
         const response = await axios.put(API_URL.UPDATE_CART(productId), { quantity }, {
-            headers: {
-                Authorization: `Bearer ${token}` 
-            }
+            // headers: {
+            //     Authorization: `Bearer ${token}` 
+            // }
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {
@@ -220,11 +236,12 @@ const updateCartQuantity = async (productId, quantity) => {
 // Remove Cart 
 const removeCartItem = async (productId) => {
     try {
-        const token = getToken();
+        // const token = getToken();
         const response = await axios.delete(API_URL.DELETE_CART(productId), {
-            headers: { 
-                Authorization: `Bearer ${token}` 
-            }
+            // headers: { 
+            //     Authorization: `Bearer ${token}` 
+            // }
+            withCredentials: true,
         });
         return response.data;
     } catch (error) {

@@ -1,5 +1,4 @@
 const userService = require('../services/userService');
-const jwt = require('jsonwebtoken');
 
 //Register
 exports.registerController = async (req, res) => {
@@ -28,16 +27,13 @@ exports.loginController = async (req, res) => {
                 message: 'Invalid email or password',
             })
         }
-        const {token, userName, address, phone, role} = await userService.loginUser({ email, password });
-        res.cookie('token', token, {
-            httpOnly: true, 
-            secure: false, 
-        });
+        const { token, userName, address, phone, role } = await userService.loginUser({ email, password });
+        res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`);
         res.status(200).json({
             success: true,
             message: 'Successfully Login',
-            user:{userName, email, address, phone},
-            // token,
+            user: { userName, email, address, phone },
+            token,
             role,
         });
     } catch (error) {
