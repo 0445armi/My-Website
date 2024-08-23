@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 import '../../styles/register.css';
 import {
@@ -12,6 +12,7 @@ import {
     Link
 } from 'react-router-dom';
 import { registerUser } from "../../axios/api";
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 const validationSchema = Yup.object().shape({
     userName: Yup.string().required('UserName is required'),
@@ -24,10 +25,11 @@ const validationSchema = Yup.object().shape({
 
 const Register = () => {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            const response = await registerUser(values);
+            await registerUser(values);
             toast.success('Registration successful!');
             resetForm();
             navigate('/login');
@@ -54,7 +56,7 @@ const Register = () => {
                     <Form className="register-form">
                         <h1 className='m1'>Register</h1>
                         <label className="c1">
-                        User Name:
+                            User Name:
                             <Field
                                 type="text"
                                 name="userName"
@@ -79,16 +81,24 @@ const Register = () => {
                         <br />
                         <label className="c1">
                             Password:
-                            <Field
-                                type="password"
-                                name="password"
-                                className="input"
-                            />
+                            <div className="password-container">
+                                <Field
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    className={`input ${touched.password && errors.password ? 'error' : ''}`}
+                                    autoComplete="current-password"
+                                /> <span
+                                    className="password-toggle-icon"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                </span>
+                            </div>
                             {errors.password && touched.password ? (
                                 <div className="error-message">{errors.password}</div>
                             ) : null}
                         </label>
-                        <br /> 
+                        <br />
                         <label className="c1">
                             Phone:
                             <Field type="text" name="phone" className="input" />

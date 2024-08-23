@@ -27,20 +27,40 @@ exports.loginController = async (req, res) => {
                 message: 'Invalid email or password',
             })
         }
-        const { token, userName, address, phone, role } = await userService.loginUser({ email, password });
-        res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`);
+        const { accessToken, refreshToken, userName, address, phone, role } = await userService.loginUser({ email, password });
+        res.cookie('accessToken', accessToken);
+        res.cookie('refreshToken', refreshToken);
         res.status(200).json({
             success: true,
             message: 'Successfully Login',
             user: { userName, email, address, phone },
-            token,
             role,
         });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({
             success: false,
             message: 'error in Login',
             error
         });
+    }
+};
+
+exports.refreshAccessTokenController = async (req, res) => {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+        return res.status(403).json({ message: 'No refresh token provided' });
+    }
+    try {
+        const userData = await userService.verifyRefreshToken(refreshToken);
+        const newAccessToken = userService.generateAccessToken(userData);
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 15 * 60 * 1000
+        });
+        res.status(200).json({ success: true });
+    } catch (error) {
+        return res.status(403).json({ message: 'Invalid refresh token' });
     }
 };

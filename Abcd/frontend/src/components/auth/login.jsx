@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import '../../styles/login.css';
 import {
@@ -11,22 +11,21 @@ import {
     Form
 } from 'formik';
 import { toast } from 'react-toastify';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'; 
 import { loginUser } from '../../axios/api';
 
 const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('email is required'),
-    password: Yup.string().required('password is required').min(6, 'Password must be at least 6 characters'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
 
 export const Login = () => {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
             await loginUser(values);
-            // localStorage.setItem('jwtToken', response.token);
-            // localStorage.setItem('name', response.user.userName);
-            // localStorage.setItem('role', response.role);
             toast.success('Login successful!');
             resetForm();
             navigate('/home');
@@ -36,8 +35,8 @@ export const Login = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
             navigate('/home');
         }
     }, [navigate]);
@@ -67,12 +66,19 @@ export const Login = () => {
                         <br />
                         <label className="c1">
                             Password:
-                            <Field
-                                type="password"
-                                name="password"
-                                className={`input ${touched.password && errors.password ? 'error' : ''}`}
-                                autoComplete="current-password"
-                            />
+                            <div className="password-container">
+                                <Field
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    className={`input ${touched.password && errors.password ? 'error' : ''}`}
+                                    autoComplete="current-password"
+                                /> <span
+                                    className="password-toggle-icon"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                </span>
+                            </div>
                             {errors.password && touched.password ? (
                                 <div className="error-message">{errors.password}</div>
                             ) : null}
