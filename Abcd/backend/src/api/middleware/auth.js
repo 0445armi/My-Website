@@ -13,7 +13,7 @@ const getCookieValue = (cookieHeader, cookieName) => {
 
 const authenticateToken = (req, res, next) => {
     const cookieHeader = req.headers.cookie;
-    const token = cookieHeader ? getCookieValue(cookieHeader, 'token') : null;
+    const token = cookieHeader ? getCookieValue(cookieHeader, 'accessToken') : null;
         if (!token) {
         return res.status(401).json({ message: 'No token provided' });
     }
