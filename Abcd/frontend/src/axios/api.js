@@ -293,5 +293,5 @@ export {
     updateCartQuantity,
     removeCartItem,
     createOrder,
-    verifyPayment
+    verifyPayment,
 };

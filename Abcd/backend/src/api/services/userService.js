@@ -6,27 +6,27 @@ const generateTokens = (user) => {
     const accessToken = jwt.sign(
         { userId: user._id, userName: user.userName, role: user.role },
         process.env.JWT_SECRET,
-        { expiresIn: '5m' } 
+        { expiresIn: '1m' }
     );
     const refreshToken = jwt.sign(
         { userId: user._id },
         process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' } 
     );
-    return { accessToken, refreshToken };
+    return { newAccessToken: accessToken, newRefreshToken: refreshToken };
 };
 
 const verifyRefreshToken = (refreshToken) => {
     return new Promise((resolve, reject) => {
         jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, userData) => {
             if (err) {
+                console.error('Token verification error:', err);
                 return reject('Invalid refresh token');
             }
             resolve(userData);
         });
     });
 };
-
 //Register
 const registerUser = async ({ userName, email, password, phone, address, role }) => {
     const existingUser = await User.findOne({ email });
@@ -56,22 +56,18 @@ const loginUser = async ({ email, password }) => {
         throw new Error(`Login failed: ${error.message}`);
     }
 };
-
-const refreshAccessToken = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) {
-        return res.status(403).json({ message: 'No refresh token provided' });
-    }
+//refreshToken
+const refreshAccessToken = async (refreshToken) => {
     try {
         const userData = await verifyRefreshToken(refreshToken);
-        const newAccessToken = jwt.sign(
-            { userId: userData.userId, userName: userData.userName, role: userData.role},
-            process.env.JWT_SECRET,
-            { expiresIn: '5m' }
-        );
-        res.status(200).json({ accessToken: newAccessToken });
+        const user = await User.findById(userData.userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const { newAccessToken, newRefreshToken } = generateTokens(user);
+        return { newAccessToken, newRefreshToken };
     } catch (error) {
-        res.status(403).json({ message: 'Invalid refresh token' });
+        throw new Error(`Token refresh failed: ${error.message}`);
     }
 };
 

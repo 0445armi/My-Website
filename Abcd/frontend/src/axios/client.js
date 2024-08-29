@@ -6,10 +6,13 @@ const apiClient = axios.create({
     withCredentials: true, 
 });
 
-apiClient.interceptors.request.use(
-    (config) => {
-        const accessToken = localStorage.getItem('accessToken'); 
-        if (accessToken) {
+apiClient.interceptors.request.use((config) => {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('accessToken='));
+        if (cookieValue) {
+            const accessToken = cookieValue.split('=')[1];
+            console.log("AccessToken:", accessToken);
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
         return config;
@@ -17,23 +20,22 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-apiClient.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        const { response } = error;
-        if (response && response.status === 401) { 
-            try {
-                const refreshResponse = await axios.post(`${BASE_URL}/api/refresh-token`, {}, { withCredentials: true });
-                const { accessToken } = refreshResponse.data;
-                localStorage.setItem('accessToken', accessToken);
-                response.config.headers['Authorization'] = `Bearer ${accessToken}`;
-                return axios(response.config);
-            } catch (refreshError) {
-                console.error('Refresh token failed:', refreshError);
-            }
+apiClient.interceptors.response.use((response) => {
+        return response;
+    }, async (error) => {
+        const originalRequest = error.config;
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        try {
+            const { data } = await apiClient.post('/api/refresh-token');
+            document.cookie = `accessToken=${data.accessToken}; path=/;`;
+            return apiClient(originalRequest);
+        } catch (refreshError) {
+            console.error('Failed to refresh access token:', refreshError);
+            return Promise.reject(refreshError);
         }
-        return Promise.reject(error);
     }
-);
+    return Promise.reject(error);
+});
 
 export default apiClient;

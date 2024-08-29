@@ -14,5 +14,5 @@ export const API_URL = {
     DELETE_CART: (id) => `${BASE_URL}/api/cart/${id}`,
     UPDATE_CART: (id) => `${BASE_URL}/api/cart/${id}`,
     ORDER: `${BASE_URL}/api/create-order`,
-    PAYMENT : `${BASE_URL}/api/verify-payment`
+    PAYMENT : `${BASE_URL}/api/verify-payment`,
 };

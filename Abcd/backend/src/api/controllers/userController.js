@@ -22,7 +22,7 @@ exports.loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            return res.status(404).send({
+            return res.status(400).json({
                 success: false,
                 message: 'Invalid email or password',
             })
@@ -45,21 +45,21 @@ exports.loginController = async (req, res) => {
         });
     }
 };
-
+//refreshToken
 exports.refreshAccessTokenController = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
-        return res.status(403).json({ message: 'No refresh token provided' });
+        return res.status(401).json({ message: 'No refresh token provided' });
     }
     try {
-        const userData = await userService.verifyRefreshToken(refreshToken);
-        const newAccessToken = userService.generateAccessToken(userData);
-        res.cookie('accessToken', newAccessToken, {
+        const { newAccessToken, newRefreshToken } = await userService.refreshAccessToken(refreshToken);
+        res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 15 * 60 * 1000
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: 'Strict',
         });
-        res.status(200).json({ success: true });
+        res.status(200).json({ success: true, accessToken: newAccessToken });
     } catch (error) {
         return res.status(403).json({ message: 'Invalid refresh token' });
     }
