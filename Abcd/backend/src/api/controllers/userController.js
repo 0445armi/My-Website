@@ -12,8 +12,8 @@ exports.registerController = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'error is Registrations',
-            error
+            message: 'Error is Registrations',
+            error: error.message
         });
     }
 };

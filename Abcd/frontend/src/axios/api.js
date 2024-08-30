@@ -33,7 +33,7 @@ const loginUser = async ({ email, password }) => {
             .split('; ')
             .find(row => row.startsWith('accessToken'))
             .split('=')[1];
-        console.log("Token:", cookieValue);
+        console.log("accessToken:", cookieValue);
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error.message);

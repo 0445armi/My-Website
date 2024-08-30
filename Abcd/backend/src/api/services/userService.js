@@ -42,7 +42,7 @@ const loginUser = async ({ email, password }) => {
         if (!user) throw new Error('Email is not Registered');
         const match = await comparePassword(password, user.password);
         if (!match) throw new Error('Invalid Password');
-        const { accessToken, refreshToken } = generateTokens(user);
+        const { newAccessToken: accessToken, newRefreshToken: refreshToken } = generateTokens(user);
         return { 
             accessToken, 
             refreshToken,
