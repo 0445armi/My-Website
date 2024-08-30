@@ -42,6 +42,8 @@ export const Product = () => {
     const [sortBy, setSortBy] = useState('name');
     const [sortType, setSortType] = useState('asc');
     const [searchTerm, setSearchTerm] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     const handleButtonClick = () => {
         setIsEdit(false);
@@ -122,14 +124,14 @@ export const Product = () => {
         }
     };
 
-    const loadProducts = async (page = currentPage, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
+    const loadProducts = async (page = currentPage, searchTerm = '', sortBy = 'name', sortType = 'asc', startDate = '', endDate = '') => {
         try {
-            const response = await fetchProducts(page, searchTerm, sortBy, sortType);
+            const response = await fetchProducts(page, searchTerm, sortBy, sortType, startDate, endDate);
             if (response && response.products) {
                 setProducts(response.products);
                 setTotalPages(response.totalPages || 1);
             } else {
-                setProducts([]); 
+                setProducts([]);
                 setTotalPages(1);
             }
         } catch (error) {
@@ -182,7 +184,7 @@ export const Product = () => {
         const newSortType = (sortBy === field && sortType === 'asc') ? 'desc' : 'asc';
             setSortBy(field);
             setSortType(newSortType);
-            loadProducts(currentPage, searchTerm, field, newSortType); 
+            loadProducts(currentPage, searchTerm, field, newSortType, startDate, endDate);
     };
     
     const handleSearchChange = (e) => {
@@ -195,21 +197,63 @@ export const Product = () => {
     const handleSearch = async (e) => {
         e.preventDefault();
         setCurrentPage(1);
-        loadProducts(1, searchTerm, sortBy, sortType);
+        loadProducts(1, searchTerm, sortBy, sortType, startDate, endDate);
+    };
+
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'startDate') {
+            setStartDate(value);
+        } else if (name === 'endDate') {
+            setEndDate(value);
+        }
+    };
+
+    const handleDateFilter = async (e) => {
+        e.preventDefault();
+        if (startDate > endDate) {
+            alert('Start Date must be before End Date.');
+            return;
+        }
+        setCurrentPage(1);
+        loadProducts(1, searchTerm, sortBy, sortType, startDate, endDate);
     };
 
     return (
         <div className="container">
-            <button className="btn1" onClick={handleButtonClick}>+ Create</button>
-            <form className='search-form' onSubmit={handleSearch}>
-                <input
+            <div className="header-controls">
+                <button className="btn1" onClick={handleButtonClick}>+ Create</button>
+                <form className='search-form' onSubmit={handleSearch}>
+                    <input
                     type='text'
                     className='search-input'
                     placeholder='Search...'
                     value={searchTerm}
                     onChange={handleSearchChange}
-                />
-            </form>
+                    />
+                </form>
+                <form className='date-filter-form' onSubmit={handleDateFilter}>
+                    <label>
+                        Start Date:
+                        <input
+                            type='date'
+                            name='startDate'
+                            value={startDate}
+                            onChange={handleDateChange}
+                        />
+                    </label>
+                    <label>
+                        End Date:
+                        <input
+                            type='date'
+                            name='endDate'
+                            value={endDate}
+                            onChange={handleDateChange}
+                        />
+                    </label>
+                    <button type="submit" className="btn1">Apply</button>
+                </form>
+            </div>
             {isPopupVisible && (
                 <div className="popup-overlay">
                     <div className="popup-box">

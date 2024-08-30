@@ -53,7 +53,7 @@ const createProduct = async (formData) => {
     }
 };
 // Get Product
-const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc') => {
+const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortType = 'asc', startDate, endDate) => {
     try {
         // const token = getToken();
         const response = await apiClient.get(API_URL.PRODUCTS, {
@@ -67,7 +67,9 @@ const fetchProducts = async (page = 1, searchTerm = '', sortBy = 'name', sortTyp
                 limit: 6,
                 searchTerm,
                 sortBy,
-                sortType
+                sortType,
+                startDate,
+                endDate
             },
         });
         return response.data;

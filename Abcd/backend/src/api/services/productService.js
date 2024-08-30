@@ -24,10 +24,17 @@ const deleteProduct = async (id) => {
     return result;
 };
 // Fetch Products
-const fetchProducts = async (userId, page, limit, search, sortBy, sortType) => {
-    const matchStage = search
-        ? { name: {$regex: new RegExp(search, 'i')}, userId }
-        : {};
+const fetchProducts = async (userId, page, limit, search, sortBy, sortType, startDate, endDate) => {
+    const matchStage = {};
+    if (search) {
+        matchStage.name = { $regex: new RegExp(search, 'i') };
+    }
+    if (userId) {
+        matchStage.userId = userId;
+    }
+    if (startDate && endDate) {
+        matchStage.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    }
     const sortStage = {
         [sortBy]: sortType === 'asc' ? 1 : -1,
     };

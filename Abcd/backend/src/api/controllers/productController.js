@@ -31,10 +31,10 @@ exports.createProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { page = 1, limit = 10, searchTerm = '', sortBy = 'name', sortType = 'asc' } = req.query;
+        const { page = 1, limit = 10, searchTerm = '', sortBy = 'name', sortType = 'asc', startDate = '', endDate = ''} = req.query;
         const parsedPage = parseInt(page, 10);
         const parsedLimit = parseInt(limit, 10);
-        const { products, totalPages } = await productService.fetchProducts(userId, parsedPage, parsedLimit, searchTerm, sortBy, sortType);
+        const { products, totalPages } = await productService.fetchProducts(userId, parsedPage, parsedLimit, searchTerm, sortBy, sortType, startDate, endDate);
         res.status(200).json({ products, totalPages });
     } catch (error) {   
         res.status(400).json({ message: error.message });
