@@ -13,12 +13,12 @@
 .date-filter-form{
     display: flex;
     align-items: center;
-    margin-left: 450px;
-    margin-top: 15px;
+    margin-left: 454px;
+    margin-top: 19px;
 }
 
 .date-filter-form label {
-    margin-right: 10px;
+    margin-right: 7px;
 }
 
 .h1 {
@@ -36,8 +36,8 @@
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
-    margin-top: 31px;
-    margin-bottom: 15px;
+    margin-top: 24px;
+    margin-bottom: 17px;
     cursor: pointer;
     border-radius: 10%;
 }
