@@ -12,7 +12,6 @@ apiClient.interceptors.request.use((config) => {
             .find(row => row.startsWith('accessToken='));
         if (cookieValue) {
             const accessToken = cookieValue.split('=')[1];
-            console.log("AccessToken:", accessToken);
             config.headers['Authorization'] = `Bearer ${accessToken}`;
         }
         return config;

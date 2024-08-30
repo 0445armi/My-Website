@@ -29,11 +29,6 @@ const loginUser = async ({ email, password }) => {
         const { role, user: { userName } } = response.data;
         localStorage.setItem('role', role);
         localStorage.setItem('name', userName);
-        const cookieValue = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('accessToken'))
-            .split('=')[1];
-        console.log("accessToken:", cookieValue);
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error.message);
